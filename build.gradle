@@ -1,0 +1,60 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "6.1.0"
+}
+
+group 'today.getfdp.connect'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'jitpack'
+        url 'https://jitpack.io'
+    }
+    maven {
+        name 'nukkitx-repo-release'
+        url 'https://repo.opencollab.dev/maven-releases/'
+    }
+    maven {
+        name 'nukkitx-repo-snapshot'
+        url 'https://repo.opencollab.dev/maven-snapshots/'
+    }
+}
+
+configurations {
+    include
+    implementation.extendsFrom(include)
+}
+
+dependencies {
+    include 'org.jetbrains.kotlin:kotlin-stdlib'
+
+    // protocol
+    include 'com.github.GeyserMC:MCProtocolLib:1.18-2'
+    include 'com.nukkitx.protocol:bedrock-v475:2.9.5-SNAPSHOT'
+
+    // json library
+    include 'com.beust:klaxon:5.5'
+}
+
+jar {
+    manifest.attributes(
+            "Main-Class" : "today.getfdp.connect.FConnect",
+    )
+
+    enabled = false
+}
+
+shadowJar {
+    archiveClassifier.set("")
+    configurations = [project.configurations.include]
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+
+    exclude "META-INF/maven/**"
+    exclude "META-INF/versions/**"
+    exclude "**/module-info.class"
+}
+
+tasks.build.dependsOn(shadowJar)
