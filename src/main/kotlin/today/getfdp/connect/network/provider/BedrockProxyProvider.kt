@@ -1,22 +1,15 @@
 package today.getfdp.connect.network.provider
 
-import com.beust.klaxon.json
 import com.github.steveice10.packetlib.packet.Packet
 import com.nukkitx.protocol.bedrock.BedrockClient
 import com.nukkitx.protocol.bedrock.BedrockPacket
-import com.nukkitx.protocol.bedrock.packet.DisconnectPacket
 import com.nukkitx.protocol.bedrock.packet.LoginPacket
-import com.nukkitx.protocol.bedrock.util.EncryptionUtils.createKeyPair
 import io.netty.util.AsciiString
 import today.getfdp.connect.FConnect
-import today.getfdp.connect.network.utility.BedrockLoginHelper
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.Configuration
 import java.net.DatagramSocket
 import java.net.InetSocketAddress
-import java.security.KeyPair
-import java.security.KeyPairGenerator
-import java.security.spec.ECGenParameterSpec
 
 
 /**
@@ -92,7 +85,6 @@ class BedrockProxyProvider : PlayProvider() {
         val chain = client.loginHelper.chain()
         packet.chainData = AsciiString(chain)
         packet.skinData = AsciiString(client.loginHelper.skin())
-        println(chain)
         bedrockPacketOut(packet, true)
     }
 }

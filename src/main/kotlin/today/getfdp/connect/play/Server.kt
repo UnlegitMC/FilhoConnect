@@ -5,14 +5,10 @@ import com.github.steveice10.mc.protocol.MinecraftConstants
 import com.github.steveice10.mc.protocol.MinecraftProtocol
 import com.github.steveice10.mc.protocol.ServerLoginHandler
 import com.github.steveice10.mc.protocol.codec.MinecraftCodec
-import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode
 import com.github.steveice10.mc.protocol.data.status.PlayerInfo
 import com.github.steveice10.mc.protocol.data.status.ServerStatusInfo
 import com.github.steveice10.mc.protocol.data.status.VersionInfo
 import com.github.steveice10.mc.protocol.data.status.handler.ServerInfoBuilder
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundCustomPayloadPacket
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundLoginPacket
-import com.github.steveice10.opennbt.tag.builtin.*
 import com.github.steveice10.packetlib.Server
 import com.github.steveice10.packetlib.Session
 import com.github.steveice10.packetlib.event.server.ServerAdapter
@@ -21,12 +17,7 @@ import com.github.steveice10.packetlib.event.session.SessionAdapter
 import com.github.steveice10.packetlib.packet.Packet
 import com.github.steveice10.packetlib.tcp.TcpServer
 import net.kyori.adventure.text.Component
-import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.ServerEventHandler
-import today.getfdp.connect.network.utility.PayloadEncoder
-import today.getfdp.connect.utils.getVarIntLength
-import today.getfdp.connect.utils.writeVarInt
-import java.nio.ByteBuffer
 
 
 class Server {

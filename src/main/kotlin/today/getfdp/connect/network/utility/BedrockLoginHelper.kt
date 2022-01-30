@@ -1,15 +1,14 @@
 package today.getfdp.connect.network.utility
 
+import coelho.msftauth.api.xbox.*
 import com.beust.klaxon.json
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.Configuration
+import today.getfdp.connect.utils.HttpUtils
 import today.getfdp.connect.utils.JWTUtils
-import java.security.KeyPair
 import java.security.KeyPairGenerator
-import java.security.interfaces.ECPrivateKey
-import java.security.interfaces.ECPublicKey
 import java.security.spec.ECGenParameterSpec
 import java.time.Instant
 import java.util.*
@@ -17,8 +16,7 @@ import java.util.concurrent.TimeUnit
 
 
 class BedrockLoginHelper(val client: Client) {
-    lateinit var keyPair: KeyPair
-        private set
+    val keyPair = EncryptionUtils.createKeyPair()
     lateinit var xuid: String
         private set
     lateinit var identity: UUID
@@ -29,7 +27,6 @@ class BedrockLoginHelper(val client: Client) {
     fun offlineChain(): String {
         // So we need to assign the a uuid from a username, or else everytime we join a server with the same name, we will get reset(as if we are a new player)
         // Java does it this way, I'm not sure if bedrock does but it gets our goal accomplished, PlayerEntity.getOfflinePlayerUuid
-        this.keyPair = EncryptionUtils.createKeyPair()
         this.displayName = client.name
         this.identity = UUID.nameUUIDFromBytes("OfflinePlayer:$displayName".toByteArray())
         this.xuid = identity.leastSignificantBits.toString()
@@ -38,7 +35,7 @@ class BedrockLoginHelper(val client: Client) {
             "nbf" to (Instant.now().epochSecond - TimeUnit.HOURS.toSeconds(6)).toInt(),
             "identityPublicKey" to Base64.getEncoder().encodeToString(keyPair.public.encoded),
             "extraData" to json { obj(
-                "titleId" to "896928775",
+                "titleId" to "2047319603",
                 "displayName" to displayName,
                 "identity" to identity.toString(),
                 "XUID" to xuid
@@ -53,24 +50,61 @@ class BedrockLoginHelper(val client: Client) {
     }
 
     fun onlineChain(): String {
-//        this.keyPair = KEY_PAIR_GEN.generateKeyPair() // for xbox live, xbox live requests use, ES256, ECDSA256
-//        var public = keyPair.public as ECPublicKey
-//        var private = keyPair.private as ECPrivateKey
-//
-//        val xboxService = XboxOnlineService((client.flags[Client.FLAG_ACCESS_TOKEN] ?: throw IllegalStateException("No access token found")) as String)
-//        val userToken = xboxService.getUserToken(public, private)
-//        val deviceToken = xboxService.getDeviceToken(public, private)
-//        val titleToken = xboxService.getTitleToken(public, private, deviceToken)
-//        val xsts = xboxService.getXstsToken(userToken, deviceToken, titleToken, public, private)
-//
-//        // now use ES384, ECDSA384
-//        this.keyPair = EncryptionUtils.createKeyPair()
-//        public = keyPair.public as ECPublicKey
-//        private = keyPair.private as ECPrivateKey
-//
-//        val chainData = JWTUtils.parseJsonObj(xboxService.requestMinecraftChain(xsts, public))
-//        return chainData.toJsonString(true)
-        return ""
+        val mcChain = getMojangOnlineChain()
+
+        // this minecraft chain is login-able, but we should get player name or other thingy from it
+        val chains = JWTUtils.parseJsonObj(mcChain).array<String>("chain")!! // the "chain" array must be exists
+        chains.forEach { chain ->
+            // chain must be a JWT, at least I think...
+            val payload = JWTUtils.parseJsonObj(Base64.getDecoder().decode(chain.split(".")[1]).toString(Charsets.UTF_8))
+            if(payload.containsKey("extraData")) {
+                val extraData = payload.obj("extraData")!!
+                this.displayName = extraData.string("displayName")!!
+                this.identity = UUID.fromString(extraData.string("identity")!!)
+                this.xuid = extraData.string("XUID")!!
+            }
+        }
+
+        return mcChain
+    }
+
+    private fun getMojangOnlineChain(): String {
+        val accessToken = client.flags[Client.FLAG_ACCESS_TOKEN] as String
+        val key = XboxDeviceKey() // this key used to sign the post content
+
+        val userToken = XboxUserAuthRequest(
+            "http://auth.xboxlive.com", "JWT", "RPS",
+            "user.auth.xboxlive.com", "t=$accessToken"
+        ).request()
+        val deviceToken = XboxDeviceAuthRequest(
+            "http://auth.xboxlive.com", "JWT", "Nintendo",
+            "0.0.0.0", key
+        ).request()
+        val titleToken: XboxToken = XboxTitleAuthRequest(
+            "http://auth.xboxlive.com", "JWT", "RPS",
+            "user.auth.xboxlive.com", "t=$accessToken", deviceToken.token, key
+        ).request()
+        val xstsToken = XboxXSTSAuthRequest(
+            "https://multiplayer.minecraft.net/",
+            "JWT",
+            "RETAIL",
+            listOf(userToken),
+            titleToken,
+            XboxDevice(key, deviceToken)
+        ).request()
+
+        // use the xsts token to generate the identity token
+        val identityToken = xstsToken.toIdentityToken()
+
+        // then, we can request the chain
+        val data = json { obj(
+            "identityPublicKey" to Base64.getEncoder().encodeToString(keyPair.public.encoded)
+        ) }
+        val connection = HttpUtils.make("https://multiplayer.minecraft.net/authentication", "POST", data.toJsonString(),
+            mapOf("Content-Type" to "application/json", "Authorization" to identityToken,
+                "User-Agent" to "MCPE/UWP", "Client-Version" to FConnect.bedrockCodec.minecraftVersion))
+
+        return connection.inputStream.reader().readText()
     }
 
     fun chain(): String {

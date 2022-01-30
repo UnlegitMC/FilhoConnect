@@ -37,6 +37,9 @@ dependencies {
 
     // json library
     include 'com.beust:klaxon:5.5'
+
+    // xbox authentication library
+    implementation 'com.github.UnlegitMC:minecraft-msftauth:2.0.0'
 }
 
 jar {

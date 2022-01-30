@@ -1,10 +1,7 @@
 package today.getfdp.connect.play
 
-import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
-import today.getfdp.connect.FConnect
-import today.getfdp.connect.utils.Configuration
+import today.getfdp.connect.utils.JWTUtils
 import java.io.File
 
 object AutoLoginManager {
@@ -16,7 +13,7 @@ object AutoLoginManager {
         if(!file.exists()) {
             return
         }
-        val json = FConnect.parser.parse(StringBuilder(file.readText(Charsets.UTF_8))) as JsonObject
+        val json = JWTUtils.parseJsonObj(file.readText(Charsets.UTF_8))
         data.clear()
         json.obj("tokens")?.forEach {
             data[it.key] = it.value as String

@@ -1,8 +1,6 @@
 package today.getfdp.connect.utils
 
 import com.beust.klaxon.JsonObject
-import com.beust.klaxon.KlaxonJson
-import com.beust.klaxon.Parser
 import com.beust.klaxon.json
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.authenticate.JoseStuff
@@ -12,7 +10,6 @@ import java.util.*
 
 
 object JWTUtils {
-    private val parser = Parser.default()
 
     fun toJWT(payload: String, keyPair: KeyPair): String {
         val headerJson = json { obj(
@@ -34,6 +31,6 @@ object JWTUtils {
     }
 
     fun parseJsonObj(string: String): JsonObject {
-        return parser.parse(StringBuilder(string)) as JsonObject
+        return FConnect.parser.parse(StringBuilder(string)) as JsonObject
     }
 }

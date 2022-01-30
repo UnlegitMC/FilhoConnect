@@ -1,6 +1,5 @@
 package today.getfdp.connect.network.provider
 
-import com.beust.klaxon.Klaxon
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundLoginPacket
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.entity.player.ClientboundPlayerPositionPacket

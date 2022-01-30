@@ -1,8 +1,6 @@
 package today.getfdp.connect.utils
 
 import com.beust.klaxon.JsonObject
-import com.beust.klaxon.JsonReader
-import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import java.io.File
 
