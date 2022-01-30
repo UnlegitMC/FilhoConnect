@@ -6,6 +6,7 @@ import com.beust.klaxon.json
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec
 import com.nukkitx.protocol.bedrock.v407.Bedrock_v407
 import today.getfdp.connect.network.ServerEventHandler
+import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Server
 import today.getfdp.connect.utils.Configuration
 import today.getfdp.connect.utils.JWTUtils
@@ -44,6 +45,11 @@ object FConnect {
 
     fun start() {
         Configuration.load()
+
+        if(Configuration[Configuration.Key.XBOX_AUTOLOGIN]) {
+            AutoLoginManager.load()
+        }
+
         syncBedrockCodecFromConfig()
         logger.info("Loaded bedrock codec for Minecraft ${bedrockCodec.minecraftVersion}(Protocol Version ${bedrockCodec.protocolVersion})")
 

@@ -9,6 +9,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundCh
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosPacket
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosRotPacket
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerRotPacket
+import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundSwingPacket
 import com.github.steveice10.opennbt.tag.builtin.*
 import com.github.steveice10.packetlib.packet.Packet
 import net.kyori.adventure.text.Component
@@ -16,7 +17,9 @@ import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.Style
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.utility.PayloadEncoder
+import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Client
+import today.getfdp.connect.utils.Configuration
 import today.getfdp.connect.utils.HttpUtils
 import java.io.IOException
 import kotlin.concurrent.thread
@@ -43,6 +46,9 @@ class AuthenticateProvider : PlayProvider() {
                 .style(Style.empty().clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, "https://login.live.com/oauth20_authorize.srf?client_id=00000000441cc96b&redirect_uri=https://login.live.com/oauth20_desktop.srf&response_type=code&scope=service::user.auth.xboxlive.com::MBI_SSL"))))
             .append(Component.text(" link to get your token!")))
         client.chat("And then §acopy the link which redirected§f or §cpaste the M.R3_BAY.token§f in chat!")
+        if(Configuration[Configuration.Key.XBOX_AUTOLOGIN] && AutoLoginManager[client.name] != null) {
+            client.chat("§a§lAuto login is supported! Swing your arm to auto login!")
+        }
     }
 
     override fun remove() {
@@ -68,6 +74,22 @@ class AuthenticateProvider : PlayProvider() {
                 })
             } else {
                 client.chat("§c§lIllegal input! Input should like this format: §r§6https://login.live.com/oauth20_desktop.srf?code=M.R3_BL2.00000000-0000-0000-0000-000000000000&lc=1033")
+            }
+        } else if (packet is ServerboundSwingPacket) {
+            if(Configuration[Configuration.Key.XBOX_AUTOLOGIN] && AutoLoginManager[client.name] != null) {
+                client.chat("§aTrying autologin...")
+                thread {
+                    inLoginProcess = true
+                    submitToken(AutoLoginManager[client.name]!!)
+                    try {
+                    } catch (t: Throwable) {
+                        t.printStackTrace()
+                        client.chat("§c§lAutologin failed! Please do normal login!")
+                        AutoLoginManager[client.name] = null
+                    } finally {
+                        inLoginProcess = false
+                    }
+                }
             }
         }
     }
@@ -118,7 +140,9 @@ class AuthenticateProvider : PlayProvider() {
         } else {
             throw Exception("Unable to find access token")
         }
-        // TODO: store new refresh_token and autologin next time
+        if(Configuration[Configuration.Key.XBOX_AUTOLOGIN]) {
+            AutoLoginManager[client.name] = json.string("refresh_token")!!
+        }
         client.provider = BedrockProxyProvider() // auth success, switch to bedrock proxy
     }
 

@@ -1,12 +1,8 @@
 package today.getfdp.connect.network.utility
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.JsonReader
-import com.beust.klaxon.Parser
 import com.beust.klaxon.json
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils
 import today.getfdp.connect.FConnect
-import today.getfdp.connect.network.authenticate.XboxOnlineService
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.Configuration
 import today.getfdp.connect.utils.JWTUtils
@@ -57,23 +53,24 @@ class BedrockLoginHelper(val client: Client) {
     }
 
     fun onlineChain(): String {
-        this.keyPair = KEY_PAIR_GEN.generateKeyPair() // for xbox live, xbox live requests use, ES256, ECDSA256
-        var public = keyPair.public as ECPublicKey
-        var private = keyPair.private as ECPrivateKey
-
-        val xboxService = XboxOnlineService((client.flags[Client.FLAG_ACCESS_TOKEN] ?: throw IllegalStateException("No access token found")) as String)
-        val userToken = xboxService.getUserToken(public, private)
-        val deviceToken = xboxService.getDeviceToken(public, private)
-        val titleToken = xboxService.getTitleToken(public, private, deviceToken)
-        val xsts = xboxService.getXstsToken(userToken, deviceToken, titleToken, public, private)
-
-        // now use ES384, ECDSA384
-        this.keyPair = EncryptionUtils.createKeyPair()
-        public = keyPair.public as ECPublicKey
-        private = keyPair.private as ECPrivateKey
-
-        val chainData = JWTUtils.parseJsonObj(xboxService.requestMinecraftChain(xsts, public))
-        return chainData.toJsonString(true)
+//        this.keyPair = KEY_PAIR_GEN.generateKeyPair() // for xbox live, xbox live requests use, ES256, ECDSA256
+//        var public = keyPair.public as ECPublicKey
+//        var private = keyPair.private as ECPrivateKey
+//
+//        val xboxService = XboxOnlineService((client.flags[Client.FLAG_ACCESS_TOKEN] ?: throw IllegalStateException("No access token found")) as String)
+//        val userToken = xboxService.getUserToken(public, private)
+//        val deviceToken = xboxService.getDeviceToken(public, private)
+//        val titleToken = xboxService.getTitleToken(public, private, deviceToken)
+//        val xsts = xboxService.getXstsToken(userToken, deviceToken, titleToken, public, private)
+//
+//        // now use ES384, ECDSA384
+//        this.keyPair = EncryptionUtils.createKeyPair()
+//        public = keyPair.public as ECPublicKey
+//        private = keyPair.private as ECPrivateKey
+//
+//        val chainData = JWTUtils.parseJsonObj(xboxService.requestMinecraftChain(xsts, public))
+//        return chainData.toJsonString(true)
+        return ""
     }
 
     fun chain(): String {
