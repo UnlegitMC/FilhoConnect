@@ -1,11 +1,16 @@
 package today.getfdp.connect
 
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.KlaxonJson
+import com.beust.klaxon.json
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec
 import com.nukkitx.protocol.bedrock.v407.Bedrock_v407
 import today.getfdp.connect.network.ServerEventHandler
 import today.getfdp.connect.play.Server
 import today.getfdp.connect.utils.Configuration
+import today.getfdp.connect.utils.JWTUtils
 import java.lang.reflect.Modifier
+import java.util.*
 import java.util.logging.Logger
 
 object FConnect {
@@ -18,6 +23,9 @@ object FConnect {
 
     lateinit var bedrockCodec: BedrockPacketCodec
         private set
+
+    val klaxon = Klaxon()
+    val klaxonJson = KlaxonJson()
 
     @JvmStatic
     fun main(args: Array<String>) {

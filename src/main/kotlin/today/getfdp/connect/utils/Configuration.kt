@@ -67,11 +67,13 @@ object Configuration {
     }
 
     enum class Key(val path: String, var value: Any) {
-        SERVER_HOST("proxy.host", "0.0.0.0"),
-        SERVER_PORT("proxy.port", 25565),
-        TARGET_HOST("proxy.target_host", "127.0.0.1"),
-        TARGET_PORT("proxy.target_port", 19132),
-        ONLINE_MODE("play.online", false),
-        BEDROCK_CODEC("play.bedrock_codec", "v475")
+        SERVER_HOST("proxy.host", "0.0.0.0"), // proxy server host (Java Edition)
+        SERVER_PORT("proxy.port", 25565), // proxy server port
+        TARGET_HOST("proxy.target_host", "127.0.0.1"), // target server host (Bedrock Edition)
+        TARGET_PORT("proxy.target_port", 19132), // target server port
+        ONLINE_MODE("play.online", false), // use xbox live login
+        BEDROCK_CODEC("play.bedrock_codec", "v475"), // codec version that is used to encode and decode the bedrock packet
+        BEDROCK_PROTOCOL("play.bedrock_protocol", 475), // protocol version that actually sends to the server
+        DEVICE_OS("play.device_os", 7), // device os, 1 = Android, 7 = Windows 10
     }
 }

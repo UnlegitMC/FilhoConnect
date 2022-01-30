@@ -2,7 +2,9 @@ package today.getfdp.connect.network
 
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.provider.AuthenticateProvider
+import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.play.Client
+import today.getfdp.connect.utils.Configuration
 
 class ServerEventHandler {
 
@@ -11,13 +13,18 @@ class ServerEventHandler {
      */
     fun onConnected(client: Client) {
         FConnect.logInfo("${client.name}[${client.session.host}:${client.session.port}] connected")
-        client.provider = AuthenticateProvider()
+        client.provider = if(Configuration[Configuration.Key.ONLINE_MODE]) {
+            AuthenticateProvider()
+        } else {
+            BedrockProxyProvider()
+        }
     }
 
     /**
      * called when a client disconnects
      */
     fun onDisconnected(client: Client) {
+        client.provider = null
         FConnect.logInfo("${client.name}[${client.session.host}:${client.session.port}] disconnected")
     }
 

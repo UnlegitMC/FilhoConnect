@@ -1,18 +1,9 @@
 package today.getfdp.connect.network.provider
 
 import com.beust.klaxon.Klaxon
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode
-import com.github.steveice10.mc.protocol.data.game.level.block.BlockChangeEntry
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundChatPacket
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundLoginPacket
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.entity.ClientboundSetEntityMotionPacket
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.entity.ClientboundTeleportEntityPacket
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.entity.player.ClientboundPlayerPositionPacket
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.level.ClientboundBlockUpdatePacket
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.level.ClientboundLevelChunkWithLightPacket
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.title.ClientboundSetSubtitleTextPacket
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.title.ClientboundSetTitleTextPacket
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.title.ClientboundSetTitlesAnimationPacket
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatPacket
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosPacket
@@ -22,17 +13,12 @@ import com.github.steveice10.opennbt.tag.builtin.*
 import com.github.steveice10.packetlib.packet.Packet
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
-import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.Style
-import net.kyori.adventure.text.format.TextColor
-import net.kyori.adventure.text.format.TextDecoration
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.utility.PayloadEncoder
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.HttpUtils
 import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
 import kotlin.concurrent.thread
 
 class AuthenticateProvider : PlayProvider() {
@@ -43,25 +29,28 @@ class AuthenticateProvider : PlayProvider() {
         super.apply(client)
         if(!client.isLogin) {
             packetOut(ClientboundLoginPacket(0, false, GameMode.SURVIVAL, GameMode.SURVIVAL, 1, arrayOf("minecraft:world"), getDimensionTag(), getOverworldTag(), "minecraft:world", 100, 0, 16, 16, false, false, false, false))
-            PayloadEncoder.sendBrand(client.session)}
+            PayloadEncoder.sendBrand(client.session)
+        }
         // no respawn packet cause dimension don't affect the extra login process
         // spawn the player
         packetOut(posPacket)
         // send title
         packetOut(ClientboundSetTitlesAnimationPacket(0, 114514, 0))
-        packetOut(ClientboundSetTitleTextPacket(Component.text("§eLogin is required!")))
-        packetOut(ClientboundSetSubtitleTextPacket(Component.text("§7${FConnect.PROGRAM_NAME} ver${FConnect.PROGRAM_VERSION}")))
+        client.title("§eLogin is required!")
+        client.subtitle("§7${FConnect.PROGRAM_NAME} ver${FConnect.PROGRAM_VERSION}")
         // send tip message
-        packetOut(ClientboundChatPacket(Component.text("Open ")
-            .append(Component.text("§nthis§r")
+        client.chat(Component.text("Open ").append(Component.text("§nthis§r")
                 .style(Style.empty().clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, "https://login.live.com/oauth20_authorize.srf?client_id=00000000441cc96b&redirect_uri=https://login.live.com/oauth20_desktop.srf&response_type=code&scope=service::user.auth.xboxlive.com::MBI_SSL"))))
-            .append(Component.text(" link to get your token!"))))
-        packetOut(ClientboundChatPacket(Component.text("And then §acopy the link which redirected§f or §cpaste the M.R3_BAY.token§f in chat!")))
+            .append(Component.text(" link to get your token!")))
+        client.chat("And then §acopy the link which redirected§f or §cpaste the M.R3_BAY.token§f in chat!")
     }
 
     override fun remove() {
         // reset title animation
         packetOut(ClientboundSetTitlesAnimationPacket(10, 70, 20))
+        // reset title
+        client.title("")
+        client.subtitle("")
     }
 
     override fun packetIn(packet: Packet) {
@@ -70,7 +59,7 @@ class AuthenticateProvider : PlayProvider() {
         } else if (packet is ServerboundChatPacket) {
             val msg = packet.message
             if (inLoginProcess) {
-                packetOut(ClientboundChatPacket(Component.text("§c§lPlease wait...")))
+                client.chat("§c§lPlease wait...")
             } else if (msg.startsWith("M.R3")) { // M.R3_BAY token
                 clientLogin(msg)
             } else if (msg.startsWith("https://login.live.com/oauth20_desktop.srf")) { // link redirected
@@ -78,13 +67,13 @@ class AuthenticateProvider : PlayProvider() {
                     if(it.contains("&")) it.split("&")[0] else it
                 })
             } else {
-                packetOut(ClientboundChatPacket(Component.text("§c§lIllegal input! Input should like this format: §r§6https://login.live.com/oauth20_desktop.srf?code=M.R3_BL2.00000000-0000-0000-0000-000000000000&lc=1033")))
+                client.chat("§c§lIllegal input! Input should like this format: §r§6https://login.live.com/oauth20_desktop.srf?code=M.R3_BL2.00000000-0000-0000-0000-000000000000&lc=1033")
             }
         }
     }
 
     private fun clientLogin(token: String) {
-        packetOut(ClientboundChatPacket(Component.text("§aVerifying token...")))
+        client.chat("§aVerifying token...")
         // bedrock requires access token, not m.r3_bay token, so we need to get the refresh token and transform it to access token
         thread {
             inLoginProcess = true
@@ -92,7 +81,7 @@ class AuthenticateProvider : PlayProvider() {
                 val conn = HttpUtils.make("https://login.live.com/oauth20_token.srf", "POST",
                     "client_id=00000000441cc96b&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code&code=$token",
                     mapOf("Content-Type" to "application/x-www-form-urlencoded"))
-                val json = Klaxon().parseJsonObject(try {
+                val json = FConnect.klaxon.parseJsonObject(try {
                     conn.inputStream.reader(Charsets.UTF_8)
                 } catch (t: IOException) {
                     conn.errorStream.reader(Charsets.UTF_8)
@@ -118,7 +107,7 @@ class AuthenticateProvider : PlayProvider() {
      * get the usable access token from the refresh token
      */
     private fun submitToken(refreshToken: String) {
-        val json = Klaxon().parseJsonObject(HttpUtils.make("https://login.live.com/oauth20_token.srf", "POST",
+        val json = FConnect.klaxon.parseJsonObject(HttpUtils.make("https://login.live.com/oauth20_token.srf", "POST",
             "client_id=00000000441cc96b&scope=service::user.auth.xboxlive.com::MBI_SSL&grant_type=refresh_token&redirect_uri=https://login.live.com/oauth20_desktop.srf&refresh_token=$refreshToken",
             mapOf("Content-Type" to "application/x-www-form-urlencoded")).inputStream.reader(Charsets.UTF_8))
         if(json.containsKey("access_token")) {
@@ -130,6 +119,7 @@ class AuthenticateProvider : PlayProvider() {
             throw Exception("Unable to find access token")
         }
         // TODO: store new refresh_token and autologin next time
+        client.provider = BedrockProxyProvider() // auth success, switch to bedrock proxy
     }
 
     private fun getDimensionTag(): CompoundTag {
