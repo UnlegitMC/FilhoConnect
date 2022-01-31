@@ -15,7 +15,6 @@ import today.getfdp.connect.play.Server
 import today.getfdp.connect.utils.Configuration
 import today.getfdp.connect.utils.logError
 import java.lang.reflect.Modifier
-import java.util.logging.Logger
 
 object FConnect {
 

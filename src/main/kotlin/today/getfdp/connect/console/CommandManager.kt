@@ -1,6 +1,5 @@
 package today.getfdp.connect.console
 
-import today.getfdp.connect.FConnect
 import today.getfdp.connect.utils.ClassUtils
 import today.getfdp.connect.utils.logError
 

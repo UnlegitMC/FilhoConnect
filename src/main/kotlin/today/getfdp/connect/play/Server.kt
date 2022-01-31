@@ -40,7 +40,7 @@ class Server {
                 val motd = eventHandler.getMotd()
                 ServerStatusInfo(
                     VersionInfo(MinecraftCodec.CODEC.minecraftVersion, MinecraftCodec.CODEC.protocolVersion),
-                    PlayerInfo(motd.nowPlayers, motd.maxPlayers, emptyArray()), Component.text(motd.message), motd.icon
+                    PlayerInfo(motd.maxPlayers, motd.nowPlayers, motd.gameProfileArr), Component.text(motd.message), motd.icon
                 )
             } catch (e: Throwable) {
                 e.printStackTrace()

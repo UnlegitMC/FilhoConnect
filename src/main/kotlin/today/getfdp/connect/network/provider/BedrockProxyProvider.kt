@@ -6,11 +6,11 @@ import com.nukkitx.protocol.bedrock.BedrockPacket
 import com.nukkitx.protocol.bedrock.packet.LoginPacket
 import io.netty.util.AsciiString
 import today.getfdp.connect.FConnect
+import today.getfdp.connect.network.translate.TranslateManager
+import today.getfdp.connect.network.utility.BedrockConnections
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.Configuration
 import today.getfdp.connect.utils.logWarn
-import java.net.DatagramSocket
-import java.net.InetSocketAddress
 
 
 /**
@@ -18,23 +18,15 @@ import java.net.InetSocketAddress
  */
 class BedrockProxyProvider : PlayProvider() {
 
-    private val targetAddress: InetSocketAddress
-        get() = InetSocketAddress(Configuration.get<String>(Configuration.Key.TARGET_HOST), Configuration[Configuration.Key.TARGET_PORT])
-
     lateinit var bedrockClient: BedrockClient
         private set
 
     override fun apply(client: Client) {
         super.apply(client)
 
-        // get a usable port
-        val socket = DatagramSocket()
-        val address = InetSocketAddress("0.0.0.0", socket.localPort)
-        socket.close()
-        bedrockClient = BedrockClient(address)
-        bedrockClient.bind().join() // start RakNet
+        bedrockClient = BedrockConnections.getClient()
         try {
-            bedrockClient.connect(targetAddress).whenComplete { bedrockSession, throwable ->
+            bedrockClient.connect(BedrockConnections.targetAddress).whenComplete { bedrockSession, throwable ->
                 if (throwable != null) {
                     client.disconnect("Exception while connecting to Bedrock server: $throwable")
                     return@whenComplete
@@ -64,9 +56,12 @@ class BedrockProxyProvider : PlayProvider() {
     }
 
     override fun packetIn(packet: Packet) {
+        TranslateManager.handle(this, packet)
     }
 
     fun bedrockPacketIn(packet: BedrockPacket) {
+        println(packet)
+        TranslateManager.handle(this, packet)
     }
 
     fun bedrockPacketOut(packet: BedrockPacket, immediate: Boolean = false) {

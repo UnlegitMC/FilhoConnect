@@ -1,29 +1,35 @@
 package today.getfdp.connect.network.translate
 
+import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.utils.ClassUtils
+import java.lang.reflect.Method
 
 object TranslateManager {
 
-    val bedrockTranslatores = mutableListOf<BedrockTranslator>()
-    val javaTranslatores = mutableListOf<JavaTranslator>()
+    val translators = mutableListOf<TranslatorBase<*>>()
+    val translateMethod: Method
+
+    init {
+        TranslatorBase::class.java.declaredMethods.find { it.name == "translate" }!!.let {
+            translateMethod = it
+        }
+    }
 
     fun initialize() {
-        bedrockTranslatores.clear()
-        javaTranslatores.clear()
+        translators.clear()
 
-        ClassUtils.resolvePackage(this.javaClass.`package`.name, BedrockTranslator::class.java).forEach {
+        ClassUtils.resolvePackage(this.javaClass.`package`.name, TranslatorBase::class.java).forEach {
             try {
-                bedrockTranslatores.add(it.newInstance())
+                translators.add(it.newInstance())
             } catch (t: Throwable) {
                 t.printStackTrace()
             }
         }
-        ClassUtils.resolvePackage(this.javaClass.`package`.name, JavaTranslator::class.java).forEach {
-            try {
-                javaTranslatores.add(it.newInstance())
-            } catch (t: Throwable) {
-                t.printStackTrace()
-            }
+    }
+
+    fun handle(provider: BedrockProxyProvider, packet: Any) {
+        translators.filter { it.intendedClass.isInstance(packet) }.forEach {
+            translateMethod.invoke(it, provider, packet)
         }
     }
 }
