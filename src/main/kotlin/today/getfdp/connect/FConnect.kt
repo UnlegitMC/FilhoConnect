@@ -4,10 +4,16 @@ import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonJson
 import com.beust.klaxon.Parser
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.core.config.plugins.util.PluginManager
+import today.getfdp.connect.console.CommandManager
+import today.getfdp.connect.console.Console
 import today.getfdp.connect.network.ServerEventHandler
+import today.getfdp.connect.network.translate.TranslateManager
 import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Server
 import today.getfdp.connect.utils.Configuration
+import today.getfdp.connect.utils.logError
 import java.lang.reflect.Modifier
 import java.util.logging.Logger
 
@@ -16,8 +22,12 @@ object FConnect {
     const val PROGRAM_NAME = "FilhoConnect"
     const val PROGRAM_VERSION = "0.0.1"
 
+    var running = false
+
     lateinit var server: Server
-    val logger = Logger.getLogger(PROGRAM_NAME)
+    val logger =
+        PluginManager.addPackage("net.minecrell.terminalconsole") // define terminal as log4j2 plugin first
+            .let { LogManager.getLogger(PROGRAM_NAME) }
 
     lateinit var bedrockCodec: BedrockPacketCodec
         private set
@@ -26,6 +36,10 @@ object FConnect {
     val klaxonJson = KlaxonJson()
     val parser = Parser.default()
 
+    private val consoleThread = Thread {
+        Console().start()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         val time = System.currentTimeMillis()
@@ -33,20 +47,28 @@ object FConnect {
 
         // start server
         start()
-        // add stop handler
-        Runtime.getRuntime().addShutdownHook(Thread {
-            stop()
-        })
+
+        // start console
+        startConsole()
 
         logger.info("Started in ${System.currentTimeMillis() - time}ms")
     }
 
+    fun startConsole() {
+        CommandManager.registerCommands()
+        consoleThread.start()
+    }
+
     fun start() {
+        running = true
+
         Configuration.load()
 
         if(Configuration[Configuration.Key.XBOX_AUTOLOGIN]) {
             AutoLoginManager.load()
         }
+
+        TranslateManager.initialize()
 
         syncBedrockCodecFromConfig()
         logger.info("Loaded bedrock codec for Minecraft ${bedrockCodec.minecraftVersion}(Protocol Version ${bedrockCodec.protocolVersion})")
@@ -57,8 +79,12 @@ object FConnect {
     }
 
     fun stop() {
+        running = false
         server.stop()
-        Configuration.save()
+        // stop console
+        if(consoleThread.isAlive) {
+            consoleThread.interrupt()
+        }
     }
 
     private fun syncBedrockCodecFromConfig() {
@@ -75,22 +101,8 @@ object FConnect {
                 }
             }
         } catch (t: ClassNotFoundException) {
-            logger.severe("Unsupported bedrock codec version: $codecVersion")
+            logError("Unsupported bedrock codec version: $codecVersion")
             throw t
         }
-    }
-
-    // logger functions
-
-    fun logInfo(message: Any?) {
-        logger.info((message ?: "null").toString())
-    }
-
-    fun logWarn(message: Any?) {
-        logger.warning((message ?: "null").toString())
-    }
-
-    fun logError(message: Any?) {
-        logger.severe((message ?: "null").toString())
     }
 }

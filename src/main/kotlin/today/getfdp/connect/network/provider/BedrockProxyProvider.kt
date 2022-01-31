@@ -8,6 +8,7 @@ import io.netty.util.AsciiString
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.Configuration
+import today.getfdp.connect.utils.logWarn
 import java.net.DatagramSocket
 import java.net.InetSocketAddress
 
@@ -86,5 +87,9 @@ class BedrockProxyProvider : PlayProvider() {
         packet.chainData = AsciiString(chain)
         packet.skinData = AsciiString(client.loginHelper.skin())
         bedrockPacketOut(packet, true)
+
+        if(client.name != client.loginHelper.displayName) {
+            logWarn("${client.name} is logging in with profile ${client.loginHelper.displayName}(uuid=${client.loginHelper.identity}, xuid=${client.loginHelper.xuid})")
+        }
     }
 }

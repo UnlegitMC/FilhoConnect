@@ -39,7 +39,12 @@ dependencies {
     include 'com.beust:klaxon:5.5'
 
     // xbox authentication library
-    implementation 'com.github.UnlegitMC:minecraft-msftauth:2.0.0'
+    include 'com.github.UnlegitMC:minecraft-msftauth:2.0.0'
+
+    // logging library
+    include 'org.apache.logging.log4j:log4j-core:2.17.1'
+    include 'net.minecrell:terminalconsoleappender:1.3.0'
+    include 'org.jline:jline-terminal-jansi:3.20.0'
 }
 
 jar {
@@ -58,6 +63,8 @@ shadowJar {
     exclude "META-INF/maven/**"
     exclude "META-INF/versions/**"
     exclude "**/module-info.class"
+    exclude "**/package-info.class"
+    exclude "**/Log4j2Plugins.dat"
 }
 
 tasks.build.dependsOn(shadowJar)
