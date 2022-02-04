@@ -5,8 +5,8 @@ import today.getfdp.connect.network.provider.AuthenticateProvider
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.network.utility.BedrockConnections
 import today.getfdp.connect.play.Client
-import today.getfdp.connect.utils.Configuration
-import today.getfdp.connect.utils.logInfo
+import today.getfdp.connect.utils.other.Configuration
+import today.getfdp.connect.utils.other.logInfo
 
 class ServerEventHandler {
 

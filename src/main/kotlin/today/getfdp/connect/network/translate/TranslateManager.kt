@@ -1,7 +1,7 @@
 package today.getfdp.connect.network.translate
 
 import today.getfdp.connect.network.provider.BedrockProxyProvider
-import today.getfdp.connect.utils.ClassUtils
+import today.getfdp.connect.utils.other.ClassUtils
 import java.lang.reflect.Method
 
 object TranslateManager {

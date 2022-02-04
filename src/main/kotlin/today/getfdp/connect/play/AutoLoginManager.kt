@@ -1,7 +1,7 @@
 package today.getfdp.connect.play
 
 import com.beust.klaxon.JsonObject
-import today.getfdp.connect.utils.JWTUtils
+import today.getfdp.connect.utils.network.JWTUtils
 import java.io.File
 
 object AutoLoginManager {

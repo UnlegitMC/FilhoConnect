@@ -5,7 +5,7 @@ import com.nukkitx.protocol.bedrock.packet.ServerToClientHandshakePacket
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.network.translate.TranslatorBase
-import today.getfdp.connect.utils.JWTUtils
+import today.getfdp.connect.utils.network.JWTUtils
 import java.util.*
 
 class BedrockServerToClientHandshakePacketTranslator : TranslatorBase<ServerToClientHandshakePacket> {

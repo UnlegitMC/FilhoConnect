@@ -1,4 +1,4 @@
-package today.getfdp.connect.utils
+package today.getfdp.connect.utils.other
 
 import org.apache.logging.log4j.core.config.plugins.util.ResolverUtil
 import java.lang.reflect.Modifier
@@ -9,12 +9,12 @@ object ClassUtils {
      * scan classes with specified superclass like what Reflections do but with log4j [ResolverUtil]
      * @author liulihaocai
      */
-    fun <T : Any> resolvePackage(packagePath: String, clazz: Class<T>): List<Class<out T>> {
+    fun <T : Any> resolvePackage(packagePath: String, klass: Class<T>): List<Class<out T>> {
         // use resolver in log4j to scan classes in target package
         val resolver = ResolverUtil()
 
         // set class loader
-        resolver.classLoader = clazz.classLoader
+        resolver.classLoader = klass.classLoader
 
         // set package to scan
         resolver.findInPackage(object : ResolverUtil.Test {
@@ -36,7 +36,7 @@ object ClassUtils {
 
         for(resolved in resolver.classes) {
             // check if class is assignable from target class
-            if(clazz.isAssignableFrom(resolved) && !clazz.isInterface && !Modifier.isAbstract(resolved.modifiers)) {
+            if(klass.isAssignableFrom(resolved) && !resolved.isInterface && !Modifier.isAbstract(resolved.modifiers)) {
                 // add to list
                 list.add(resolved as Class<out T>)
             }

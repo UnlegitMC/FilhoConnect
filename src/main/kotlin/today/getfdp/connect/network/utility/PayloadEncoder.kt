@@ -5,8 +5,8 @@ import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundCu
 import com.github.steveice10.packetlib.Session
 import net.kyori.adventure.text.Component
 import today.getfdp.connect.FConnect
-import today.getfdp.connect.utils.getVarIntLength
-import today.getfdp.connect.utils.writeVarInt
+import today.getfdp.connect.utils.other.getVarIntLength
+import today.getfdp.connect.utils.other.writeVarInt
 import java.nio.ByteBuffer
 
 object PayloadEncoder {

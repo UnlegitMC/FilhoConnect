@@ -12,8 +12,8 @@ import today.getfdp.connect.network.ServerEventHandler
 import today.getfdp.connect.network.translate.TranslateManager
 import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Server
-import today.getfdp.connect.utils.Configuration
-import today.getfdp.connect.utils.logError
+import today.getfdp.connect.utils.other.Configuration
+import today.getfdp.connect.utils.other.logError
 import java.lang.reflect.Modifier
 
 object FConnect {

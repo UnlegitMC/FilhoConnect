@@ -9,8 +9,8 @@ import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.translate.TranslateManager
 import today.getfdp.connect.network.utility.BedrockConnections
 import today.getfdp.connect.play.Client
-import today.getfdp.connect.utils.Configuration
-import today.getfdp.connect.utils.logWarn
+import today.getfdp.connect.utils.other.Configuration
+import today.getfdp.connect.utils.other.logWarn
 
 
 /**

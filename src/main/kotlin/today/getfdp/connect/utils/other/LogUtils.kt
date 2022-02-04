@@ -1,4 +1,4 @@
-package today.getfdp.connect.utils
+package today.getfdp.connect.utils.other
 
 import today.getfdp.connect.FConnect
 

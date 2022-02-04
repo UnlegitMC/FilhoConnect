@@ -5,9 +5,9 @@ import com.beust.klaxon.json
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.play.Client
-import today.getfdp.connect.utils.Configuration
-import today.getfdp.connect.utils.HttpUtils
-import today.getfdp.connect.utils.JWTUtils
+import today.getfdp.connect.utils.other.Configuration
+import today.getfdp.connect.utils.network.HttpUtils
+import today.getfdp.connect.utils.network.JWTUtils
 import java.security.KeyPairGenerator
 import java.security.spec.ECGenParameterSpec
 import java.time.Instant
@@ -141,7 +141,9 @@ class BedrockLoginHelper(val client: Client) {
             "PlayFabId" to "",
             "PremiumSkin" to false,
             "SelfSignedId" to UUID.randomUUID().toString(), // erm? i hope this works?
-            "ServerAddress" to "${Configuration.get<String>(Configuration.Key.TARGET_HOST)}:${Configuration.get<Int>(Configuration.Key.TARGET_PORT)}",
+            "ServerAddress" to "${Configuration.get<String>(Configuration.Key.TARGET_HOST)}:${
+                Configuration.get<Int>(
+                    Configuration.Key.TARGET_PORT)}",
             "SkinAnimationData" to "",
             "SkinColor" to "#0",
             // todo: skin data from image

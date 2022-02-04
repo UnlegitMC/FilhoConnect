@@ -18,8 +18,8 @@ import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.utility.PayloadEncoder
 import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Client
-import today.getfdp.connect.utils.Configuration
-import today.getfdp.connect.utils.HttpUtils
+import today.getfdp.connect.utils.other.Configuration
+import today.getfdp.connect.utils.network.HttpUtils
 import java.io.IOException
 import kotlin.concurrent.thread
 
@@ -128,7 +128,8 @@ class AuthenticateProvider : PlayProvider() {
      * get the usable access token from the refresh token
      */
     private fun submitToken(refreshToken: String) {
-        val json = FConnect.klaxon.parseJsonObject(HttpUtils.make("https://login.live.com/oauth20_token.srf", "POST",
+        val json = FConnect.klaxon.parseJsonObject(
+            HttpUtils.make("https://login.live.com/oauth20_token.srf", "POST",
             "client_id=00000000441cc96b&scope=service::user.auth.xboxlive.com::MBI_SSL&grant_type=refresh_token&redirect_uri=https://login.live.com/oauth20_desktop.srf&refresh_token=$refreshToken",
             mapOf("Content-Type" to "application/x-www-form-urlencoded")).inputStream.reader(Charsets.UTF_8))
         if(json.containsKey("access_token")) {
@@ -157,7 +158,7 @@ class AuthenticateProvider : PlayProvider() {
         val biomeTypes = CompoundTag("minecraft:worldgen/biome")
         biomeTypes.put(StringTag("type", "minecraft:worldgen/biome"))
         val biomeTag = ListTag("value")
-        val plainsTag = convertToValue("minecraft:plains", 0, getPlainsTag().getValue())
+        val plainsTag = convertToValue("minecraft:plains", 0, getPlainsTag().value)
         biomeTag.add(plainsTag)
         biomeTypes.put(biomeTag)
         tag.put(biomeTypes)

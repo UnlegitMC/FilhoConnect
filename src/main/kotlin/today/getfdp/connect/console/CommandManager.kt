@@ -1,7 +1,7 @@
 package today.getfdp.connect.console
 
-import today.getfdp.connect.utils.ClassUtils
-import today.getfdp.connect.utils.logError
+import today.getfdp.connect.utils.other.ClassUtils
+import today.getfdp.connect.utils.other.logError
 
 object CommandManager {
     val commands = mutableMapOf<String, Command>()

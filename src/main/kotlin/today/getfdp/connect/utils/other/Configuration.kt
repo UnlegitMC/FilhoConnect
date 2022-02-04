@@ -1,4 +1,4 @@
-package today.getfdp.connect.utils
+package today.getfdp.connect.utils.other
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser

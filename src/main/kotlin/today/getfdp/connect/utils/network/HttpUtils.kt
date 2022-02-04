@@ -1,4 +1,4 @@
-package today.getfdp.connect.utils
+package today.getfdp.connect.utils.network
 
 import java.io.DataOutputStream
 import java.net.HttpURLConnection

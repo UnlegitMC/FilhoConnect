@@ -2,9 +2,9 @@ package today.getfdp.connect.console.commands
 
 import today.getfdp.connect.console.Command
 import today.getfdp.connect.console.CommandManager
-import today.getfdp.connect.utils.logError
-import today.getfdp.connect.utils.logInfo
-import today.getfdp.connect.utils.logWarn
+import today.getfdp.connect.utils.other.logError
+import today.getfdp.connect.utils.other.logInfo
+import today.getfdp.connect.utils.other.logWarn
 import kotlin.math.ceil
 
 class HelpCommand : Command("help", "List all commands") {

@@ -1,4 +1,4 @@
-package today.getfdp.connect.utils
+package today.getfdp.connect.utils.other
 
 import java.io.InputStream
 import kotlin.experimental.or

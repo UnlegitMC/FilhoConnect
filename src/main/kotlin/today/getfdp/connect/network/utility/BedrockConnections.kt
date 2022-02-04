@@ -1,7 +1,7 @@
 package today.getfdp.connect.network.utility
 
 import com.nukkitx.protocol.bedrock.BedrockClient
-import today.getfdp.connect.utils.Configuration
+import today.getfdp.connect.utils.other.Configuration
 import java.net.DatagramSocket
 import java.net.InetSocketAddress
 
