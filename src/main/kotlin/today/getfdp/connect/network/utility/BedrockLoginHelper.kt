@@ -5,9 +5,9 @@ import com.beust.klaxon.json
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.play.Client
-import today.getfdp.connect.utils.other.Configuration
 import today.getfdp.connect.utils.network.HttpUtils
 import today.getfdp.connect.utils.network.JWTUtils
+import today.getfdp.connect.utils.other.Configuration
 import java.security.KeyPairGenerator
 import java.security.spec.ECGenParameterSpec
 import java.time.Instant

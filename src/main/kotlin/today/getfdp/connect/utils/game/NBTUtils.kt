@@ -2,10 +2,13 @@ package today.getfdp.connect.utils.game
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
+import com.github.steveice10.opennbt.NBTIO
 import com.github.steveice10.opennbt.tag.builtin.*
 import com.nukkitx.nbt.NbtList
 import com.nukkitx.nbt.NbtMap
 import com.nukkitx.nbt.NbtType
+import java.io.InputStream
+import java.util.zip.GZIPInputStream
 
 object NBTUtils {
     fun toNbtMap(json: JsonObject): NbtMap {
@@ -93,5 +96,9 @@ object NBTUtils {
         val array = JsonArray<T>()
         list.forEach { array.add(it) }
         return array
+    }
+
+    fun readCompressedTag(input: InputStream, littleEndian: Boolean = false): Tag {
+        return NBTIO.readTag(GZIPInputStream(input), littleEndian)
     }
 }
