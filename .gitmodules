@@ -1,0 +1,3 @@
+[submodule "src/main/resources/fc-data"]
+	path = src/main/resources/fc-data
+	url = git@github.com:UnlegitMC/fc-data.git

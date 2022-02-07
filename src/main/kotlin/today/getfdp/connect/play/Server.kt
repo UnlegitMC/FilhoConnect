@@ -34,7 +34,7 @@ class Server {
         server = TcpServer(host, port) { MinecraftProtocol() }
         server.setGlobalFlag(MinecraftConstants.SESSION_SERVICE_KEY, SessionService())
         server.setGlobalFlag(MinecraftConstants.VERIFY_USERS_KEY, false)
-        server.setGlobalFlag(MinecraftConstants.SERVER_COMPRESSION_THRESHOLD, 100)
+        server.setGlobalFlag(MinecraftConstants.SERVER_COMPRESSION_THRESHOLD, 256)
         server.setGlobalFlag(MinecraftConstants.SERVER_INFO_BUILDER_KEY, ServerInfoBuilder {
             try {
                 val motd = eventHandler.getMotd()

@@ -183,6 +183,7 @@ class AuthenticateProvider : PlayProvider() {
         overworldTag.put(ByteTag("has_ceiling", 0.toByte()))
         overworldTag.put(IntTag("height", 256))
         overworldTag.put(IntTag("min_y", 0))
+
         return overworldTag
     }
 
