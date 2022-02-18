@@ -1,9 +1,10 @@
-package today.getfdp.connect.network.utility
+package today.getfdp.connect.utils.protocol
 
 import coelho.msftauth.api.xbox.*
 import com.beust.klaxon.json
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils
 import today.getfdp.connect.FConnect
+import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.network.HttpUtils
 import today.getfdp.connect.utils.network.JWTUtils
@@ -69,7 +70,10 @@ class BedrockLoginHelper(val client: Client) {
     }
 
     private fun getMojangOnlineChain(): String {
-        val accessToken = client.flags[Client.FLAG_ACCESS_TOKEN] as String
+        val accessToken = AutoLoginManager.accessTokens.remove(client.name) ?: kotlin.run {
+            client.disconnect("Unable to find access token for ${client.name}")
+            throw IllegalStateException("Unable to find access token for ${client.name}")
+        }
         val key = XboxDeviceKey() // this key used to sign the post content
 
         val userToken = XboxUserAuthRequest(

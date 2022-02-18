@@ -3,7 +3,7 @@ package today.getfdp.connect.utils.network
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.json
 import today.getfdp.connect.FConnect
-import today.getfdp.connect.network.utility.JoseStuff
+import today.getfdp.connect.utils.protocol.JoseStuff
 import java.security.KeyPair
 import java.security.Signature
 import java.util.*

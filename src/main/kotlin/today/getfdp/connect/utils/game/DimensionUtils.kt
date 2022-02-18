@@ -8,6 +8,10 @@ object DimensionUtils {
 
     val dimensionCodec = NBTUtils.readCompressedTag(this.javaClass.classLoader.getResourceAsStream("fc-data/dimension.nbt")) as CompoundTag
 
+    fun getById(id: Int): Dimension {
+        return Dimension.values().find { it.id == id } ?: Dimension.OVERWORLD
+    }
+
     enum class Dimension(val id: Int, val dimName: String) {
         OVERWORLD(0, "minecraft:overworld"),
         NETHER(1, "minecraft:the_nether"),

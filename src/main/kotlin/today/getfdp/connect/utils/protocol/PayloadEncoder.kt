@@ -1,4 +1,4 @@
-package today.getfdp.connect.network.utility
+package today.getfdp.connect.utils.protocol
 
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundChatPacket
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundCustomPayloadPacket

@@ -1,4 +1,4 @@
-package today.getfdp.connect.network.utility;
+package today.getfdp.connect.utils.protocol;
 
 import java.security.SignatureException;
 

@@ -7,7 +7,7 @@ import com.nukkitx.protocol.bedrock.packet.LoginPacket
 import io.netty.util.AsciiString
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.translate.TranslateManager
-import today.getfdp.connect.network.utility.BedrockConnections
+import today.getfdp.connect.utils.protocol.BedrockConnections
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.other.Configuration
 import today.getfdp.connect.utils.other.logWarn

@@ -7,9 +7,12 @@ import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundDi
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.title.ClientboundSetSubtitleTextPacket
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.title.ClientboundSetTitleTextPacket
 import com.github.steveice10.packetlib.Session
+import com.github.steveice10.packetlib.packet.Packet
+import com.nukkitx.protocol.bedrock.BedrockPacket
 import net.kyori.adventure.text.Component
+import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.network.provider.PlayProvider
-import today.getfdp.connect.network.utility.BedrockLoginHelper
+import today.getfdp.connect.utils.protocol.BedrockLoginHelper
 import java.util.*
 
 class Client(val session: Session) {
@@ -22,7 +25,10 @@ class Client(val session: Session) {
         get() = profile.id
 
     val flags = mutableMapOf<String, Any>()
-    var isLogin = false
+
+    // objects to store in-game data
+    val thePlayer = ThePlayer(this)
+    val theWorld = TheWorld(this)
 
     /**
      * this class stores the profile of the player in the bedrock server
@@ -63,7 +69,11 @@ class Client(val session: Session) {
         session.send(ClientboundChatPacket(message))
     }
 
-    companion object {
-        val FLAG_ACCESS_TOKEN = "accessToken"
+    fun send(packet: Packet) {
+        session.send(packet)
+    }
+
+    fun send(packet: BedrockPacket) {
+        (provider as BedrockProxyProvider).bedrockPacketOut(packet)
     }
 }

@@ -1,4 +1,4 @@
-package today.getfdp.connect.network.utility
+package today.getfdp.connect.utils.protocol
 
 import com.nukkitx.protocol.bedrock.BedrockClient
 import today.getfdp.connect.utils.other.Configuration

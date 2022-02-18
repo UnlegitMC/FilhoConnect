@@ -14,7 +14,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.Style
 import today.getfdp.connect.FConnect
-import today.getfdp.connect.network.utility.PayloadEncoder
+import today.getfdp.connect.utils.protocol.PayloadEncoder
 import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.game.DimensionUtils
@@ -29,10 +29,8 @@ class AuthenticateProvider : PlayProvider() {
 
     override fun apply(client: Client) {
         super.apply(client)
-        if(!client.isLogin) {
-            packetOut(ClientboundLoginPacket(0, false, GameMode.SURVIVAL, GameMode.SURVIVAL, 1, arrayOf("minecraft:world"), DimensionUtils.dimensionCodec, DimensionUtils.Dimension.OVERWORLD.tag, "minecraft:world", 100, 0, 16, 16, false, false, false, false))
-            PayloadEncoder.sendBrand(client.session)
-        }
+        packetOut(ClientboundLoginPacket(0, false, GameMode.SURVIVAL, GameMode.SURVIVAL, 1, arrayOf("minecraft:world"), DimensionUtils.dimensionCodec, DimensionUtils.Dimension.OVERWORLD.tag, "minecraft:world", 100, 0, 16, 16, false, false, false, false))
+        PayloadEncoder.sendBrand(client.session)
         // no respawn packet cause dimension don't affect the extra login process
         // spawn the player
         packetOut(posPacket)
@@ -133,16 +131,14 @@ class AuthenticateProvider : PlayProvider() {
             "client_id=00000000441cc96b&scope=service::user.auth.xboxlive.com::MBI_SSL&grant_type=refresh_token&redirect_uri=https://login.live.com/oauth20_desktop.srf&refresh_token=$refreshToken",
             mapOf("Content-Type" to "application/x-www-form-urlencoded")).inputStream.reader(Charsets.UTF_8))
         if(json.containsKey("access_token")) {
-            client.flags[Client.FLAG_ACCESS_TOKEN] = json.string("access_token")!!
+            AutoLoginManager.accessTokens[client.name] = json.string("access_token")!!
         } else if(json.containsKey("error")) {
             client.disconnect("Something wrong while refreshing token! (error=${json["error"]}, description=${json["error_description"]})")
             return
         } else {
             throw Exception("Unable to find access token")
         }
-        if(Configuration[Configuration.Key.XBOX_AUTOLOGIN]) {
-            AutoLoginManager[client.name] = json.string("refresh_token")!!
-        }
-        client.provider = BedrockProxyProvider() // auth success, switch to bedrock proxy
+        AutoLoginManager[client.name] = json.string("refresh_token")!!
+        client.disconnect("Successfully logged in! Please reconnect to play!")
     }
 }

@@ -2,12 +2,15 @@ package today.getfdp.connect.play
 
 import com.beust.klaxon.JsonObject
 import today.getfdp.connect.utils.network.JWTUtils
+import today.getfdp.connect.utils.other.Configuration
 import java.io.File
 
 object AutoLoginManager {
 
     private val file = File("xbox_tokens.json")
     private val data = mutableMapOf<String, String>() // name, token
+
+    val accessTokens = mutableMapOf<String, String>() // name, token
 
     fun load() {
         if(!file.exists()) {
@@ -40,6 +43,8 @@ object AutoLoginManager {
         } else {
             data[name] = token
         }
-        save()
+        if(Configuration[Configuration.Key.XBOX_AUTOLOGIN]) {
+            save()
+        }
     }
 }
