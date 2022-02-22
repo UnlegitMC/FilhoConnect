@@ -1,11 +1,11 @@
-package today.getfdp.connect.network.translate.bedrock.play
+package today.getfdp.connect.translate.bedrock.play
 
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundChatPacket
 import com.nukkitx.protocol.bedrock.packet.TextPacket
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import today.getfdp.connect.network.provider.BedrockProxyProvider
-import today.getfdp.connect.network.translate.TranslatorBase
+import today.getfdp.connect.translate.TranslatorBase
 import today.getfdp.connect.utils.game.GameUtils
 
 class BedrockTextPacketTranslator : TranslatorBase<TextPacket> {

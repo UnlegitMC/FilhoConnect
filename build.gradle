@@ -33,7 +33,7 @@ dependencies {
 
     // protocol
     include 'com.github.GeyserMC:MCProtocolLib:1.18-2'
-    include 'com.nukkitx.protocol:bedrock-v475:2.9.5-SNAPSHOT'
+    include 'com.nukkitx.protocol:bedrock-v486:2.9.5-SNAPSHOT'
 
     // json library
     include 'com.beust:klaxon:5.5'

@@ -1,8 +1,8 @@
-package today.getfdp.connect.network.translate.bedrock.connect
+package today.getfdp.connect.translate.bedrock.connect
 
 import com.nukkitx.protocol.bedrock.packet.DisconnectPacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
-import today.getfdp.connect.network.translate.TranslatorBase
+import today.getfdp.connect.translate.TranslatorBase
 
 class BedrockDisconnectPacketTranslator : TranslatorBase<DisconnectPacket> {
 

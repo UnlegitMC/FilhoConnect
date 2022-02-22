@@ -1,4 +1,4 @@
-package today.getfdp.connect.network.translate
+package today.getfdp.connect.translate
 
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 

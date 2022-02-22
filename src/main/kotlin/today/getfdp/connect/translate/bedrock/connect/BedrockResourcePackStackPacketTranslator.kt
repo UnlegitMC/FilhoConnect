@@ -1,10 +1,10 @@
-package today.getfdp.connect.network.translate.bedrock.connect
+package today.getfdp.connect.translate.bedrock.connect
 
 import com.nukkitx.protocol.bedrock.packet.ResourcePackClientResponsePacket
 import com.nukkitx.protocol.bedrock.packet.ResourcePackStackPacket
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.provider.BedrockProxyProvider
-import today.getfdp.connect.network.translate.TranslatorBase
+import today.getfdp.connect.translate.TranslatorBase
 import today.getfdp.connect.utils.other.logWarn
 
 class BedrockResourcePackStackPacketTranslator : TranslatorBase<ResourcePackStackPacket> {
@@ -16,9 +16,5 @@ class BedrockResourcePackStackPacketTranslator : TranslatorBase<ResourcePackStac
         val respPacket = ResourcePackClientResponsePacket()
         respPacket.status = ResourcePackClientResponsePacket.Status.COMPLETED
         provider.bedrockPacketOut(respPacket)
-
-        if(packet.gameVersion != FConnect.bedrockCodec.minecraftVersion) {
-            logWarn("Server GameVersion not match! (${packet.gameVersion})")
-        }
     }
 }

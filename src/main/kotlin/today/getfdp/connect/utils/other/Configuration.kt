@@ -71,8 +71,8 @@ object Configuration {
         TARGET_PORT("proxy.target_port", 19132), // target server port
         ONLINE_MODE("play.online", false), // use xbox live login
         XBOX_AUTOLOGIN("play.xbox_auto_login", true), // this stores microsoft access token
-        BEDROCK_CODEC("play.bedrock_codec", "v475"), // codec version that is used to encode and decode the bedrock packet
-        BEDROCK_PROTOCOL("play.bedrock_protocol", 475), // protocol version that actually sends to the server
+        BEDROCK_CODEC("play.bedrock_codec", "v486"), // codec version that is used to encode and decode the bedrock packet
+        BEDROCK_PROTOCOL("play.bedrock_protocol", 486), // protocol version that actually sends to the server
         DEVICE_OS("play.device_os", 7), // device os, 1 = Android, 7 = Windows 10
     }
 }
