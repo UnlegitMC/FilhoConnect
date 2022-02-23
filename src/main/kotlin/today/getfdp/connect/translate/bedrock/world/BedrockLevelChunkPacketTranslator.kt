@@ -1,5 +1,8 @@
 package today.getfdp.connect.translate.bedrock.world
 
+import com.github.steveice10.mc.protocol.data.game.chunk.ChunkSection
+import com.github.steveice10.mc.protocol.data.game.chunk.palette.GlobalPalette
+import com.github.steveice10.mc.protocol.packet.ingame.clientbound.level.ClientboundLevelChunkWithLightPacket
 import com.github.steveice10.packetlib.io.NetInput
 import com.github.steveice10.packetlib.io.stream.StreamNetInput
 import com.nukkitx.protocol.bedrock.packet.LevelChunkPacket
@@ -16,33 +19,27 @@ class BedrockLevelChunkPacketTranslator : TranslatorBase<LevelChunkPacket> {
 
     override fun translate(provider: BedrockProxyProvider, packet: LevelChunkPacket) {
         // use NetInput to make reading easier
-        val nin = StreamNetInput(ByteArrayInputStream(packet.data))
+//        val nin = StreamNetInput(ByteArrayInputStream(packet.data))
+//
+//        repeat(packet.subChunksLength) {
+//            val version = nin.readByte().toInt()
+//            if (version != STREAM_STORAGE_VERSION) { // TODO: add 0 version support to make PocketMine compatible
+//                throw IllegalStateException("Unsupported chunk version: $version")
+//            }
+//            val layers = nin.readByte().toInt()
+//            repeat(layers) {
+//                val paletteHeader = nin.readByte().toInt()
+//                val isRuntime = (paletteHeader and 1) == 1
+//                val paletteVersion = paletteHeader or 1 shr 1
+//            }
+//            return
+//        }
 
-        repeat(packet.subChunksLength) {
-            val version = nin.readByte().toInt()
-            if (version != STREAM_STORAGE_VERSION) { // TODO: add 0 version support to make PocketMine compatible
-                throw IllegalStateException("Unsupported chunk version: $version")
-            }
-            val layers = nin.readByte().toInt()
-            repeat(layers) {
-                val paletteHeader = nin.readByte().toInt()
-                val isRuntime = (paletteHeader and 1) == 1
-                val paletteVersion = paletteHeader or 1 shr 1
-//                    val bitArrayVersion = BitArrayVersion.get(paletteVersion, true)
+//        val levelPacket = ClientboundLevelChunkWithLightPacket()
 //
-//                    val maxBlocksInSection = 4096 // 16*16*16
-//
-//                    val bitArray = bitArrayVersion.createPalette(maxBlocksInSection)
-//                    val wordsSize: Int = bitArrayVersion.getWordsForSize(maxBlocksInSection)
-//
-//                    for (wordIterationIndex in 0 until wordsSize) {
-//                        val word = byteBuf.readIntLE()
-//                        bitArray.getWords().get(wordIterationIndex) = word
-//                    }
-
-            }
-            return
-        }
+//        val cs = ChunkSection()
+//        cs.setBlock(0, 0, 0, 1)
+//        cs.biomeData.set(0, 0, 0, 1)
 
         // we don't need to release NetInput, it's done automatically. That's why we don't use ByteBuf
     }

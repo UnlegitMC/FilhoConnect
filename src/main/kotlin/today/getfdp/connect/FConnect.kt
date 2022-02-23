@@ -9,10 +9,10 @@ import org.apache.logging.log4j.core.config.plugins.util.PluginManager
 import today.getfdp.connect.console.CommandManager
 import today.getfdp.connect.console.Console
 import today.getfdp.connect.network.ServerEventHandler
-import today.getfdp.connect.translate.TranslateManager
 import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Server
 import today.getfdp.connect.resources.ResourceHolder
+import today.getfdp.connect.translate.TranslateManager
 import today.getfdp.connect.utils.other.Configuration
 import today.getfdp.connect.utils.other.logError
 import java.lang.reflect.Modifier
