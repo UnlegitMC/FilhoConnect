@@ -60,7 +60,7 @@ class BedrockProxyProvider : PlayProvider() {
     }
 
     fun bedrockPacketIn(packet: BedrockPacket) {
-        println(packet)
+//        println(packet)
         TranslateManager.handle(this, packet)
     }
 

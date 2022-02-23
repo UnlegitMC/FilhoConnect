@@ -15,7 +15,6 @@ class BedrockServerToClientHandshakePacketTranslator : TranslatorBase<ServerToCl
 
     override fun translate(provider: BedrockProxyProvider, packet: ServerToClientHandshakePacket) {
         try {
-            println(packet.jwt)
             val jwtSplit = packet.jwt.split(".")
             val headerObject = JWTUtils.parseJsonObj(String(Base64.getDecoder().decode(jwtSplit[0])))
             val payloadObject = JWTUtils.parseJsonObj(String(Base64.getDecoder().decode(jwtSplit[1])))

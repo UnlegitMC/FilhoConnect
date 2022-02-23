@@ -4,7 +4,9 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.json
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.utils.protocol.JoseStuff
+import java.math.BigInteger
 import java.security.KeyPair
+import java.security.MessageDigest
 import java.security.Signature
 import java.util.*
 
@@ -32,5 +34,19 @@ object JWTUtils {
 
     fun parseJsonObj(string: String): JsonObject {
         return FConnect.parser.parse(StringBuilder(string)) as JsonObject
+    }
+
+    fun md5(string: String): String {
+        val m = MessageDigest.getInstance("MD5")
+        m.reset()
+        m.update(string.toByteArray(Charsets.UTF_8))
+        val digest = m.digest()
+        val bigInt = BigInteger(1, digest)
+        var hashtext = bigInt.toString(16)
+        // Now we need to zero pad it if you actually want the full 32 chars.
+        while (hashtext.length < 32) {
+            hashtext = "0$hashtext"
+        }
+        return hashtext
     }
 }

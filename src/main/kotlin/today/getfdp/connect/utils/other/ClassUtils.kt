@@ -44,4 +44,22 @@ object ClassUtils {
 
         return list
     }
+
+    fun <T : Any> resolveInstances(packagePath: String, klass: Class<T>): List<T> {
+        val list = mutableListOf<T>()
+
+        for(clazz in resolvePackage(packagePath, klass)) {
+            list.add(getInstance(clazz))
+        }
+
+        return list
+    }
+
+    fun <T : Any> getInstance(klass: Class<T>): T {
+        return try {
+            klass.newInstance()
+        } catch (e: IllegalAccessException) {
+            klass.getDeclaredField("INSTANCE").get(null) as T
+        }
+    }
 }

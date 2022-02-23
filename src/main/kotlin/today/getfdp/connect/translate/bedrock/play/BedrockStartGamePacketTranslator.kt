@@ -23,7 +23,6 @@ class BedrockStartGamePacketTranslator : TranslatorBase<StartGamePacket> {
             DimensionUtils.dimensionCodec, DimensionUtils.getById(packet.dimensionId).tag,
             "minecraft:overworld", packet.seed.toLong(), Int.MAX_VALUE, 32, 32 /** hmm? **/,
             false, true, false, false)
-        PayloadEncoder.sendBrand(provider.client.session)
         provider.packetOut(loginPacket)
 
         // send client a position packet to close loading screen
@@ -39,5 +38,8 @@ class BedrockStartGamePacketTranslator : TranslatorBase<StartGamePacket> {
         val setLocalPlayerAsInitializedPacket = SetLocalPlayerAsInitializedPacket()
         setLocalPlayerAsInitializedPacket.runtimeEntityId = packet.runtimeEntityId
         provider.bedrockPacketOut(setLocalPlayerAsInitializedPacket)
+
+        // send brand info
+        PayloadEncoder.sendBrand(provider.client.session)
     }
 }
