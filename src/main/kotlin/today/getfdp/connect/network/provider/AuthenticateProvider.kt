@@ -14,12 +14,12 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.Style
 import today.getfdp.connect.FConnect
-import today.getfdp.connect.utils.protocol.PayloadEncoder
 import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.game.DimensionUtils
 import today.getfdp.connect.utils.network.HttpUtils
 import today.getfdp.connect.utils.other.Configuration
+import today.getfdp.connect.utils.protocol.PayloadEncoder
 import java.io.IOException
 import kotlin.concurrent.thread
 
@@ -139,6 +139,7 @@ class AuthenticateProvider : PlayProvider() {
             throw Exception("Unable to find access token")
         }
         AutoLoginManager[client.name] = json.string("refresh_token")!!
+        remove() // reset title
         client.disconnect("Successfully logged in! Please reconnect to play!")
     }
 }

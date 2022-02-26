@@ -1,9 +1,12 @@
 package today.getfdp.connect.utils.network
 
+import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.json
+import com.google.gson.JsonPrimitive
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.utils.protocol.JoseStuff
+import java.lang.reflect.Field
 import java.math.BigInteger
 import java.security.KeyPair
 import java.security.MessageDigest
@@ -12,6 +15,15 @@ import java.util.*
 
 
 object JWTUtils {
+
+    private val primitiveValueField: Field
+
+    init {
+        JsonPrimitive::class.java.getDeclaredField("value").also {
+            it.isAccessible = true
+            primitiveValueField = it
+        }
+    }
 
     fun toJWT(payload: String, keyPair: KeyPair): String {
         val headerJson = json { obj(
@@ -32,8 +44,20 @@ object JWTUtils {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(signatureBytes)
     }
 
+    fun parseJson(string: String): Any {
+        return FConnect.parser.parse(StringBuilder(string))
+    }
+
+    fun parseJsonArr(string: String): JsonArray<*> {
+        return parseJson(string) as JsonArray<*>
+    }
+
     fun parseJsonObj(string: String): JsonObject {
-        return FConnect.parser.parse(StringBuilder(string)) as JsonObject
+        return parseJson(string) as JsonObject
+    }
+
+    fun getValuePrimitive(json: JsonPrimitive): Any {
+        return primitiveValueField.get(json)
     }
 
     fun md5(string: String): String {

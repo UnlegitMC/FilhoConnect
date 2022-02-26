@@ -2,10 +2,8 @@ package today.getfdp.connect.resources
 
 import today.getfdp.connect.utils.network.HttpUtils
 import today.getfdp.connect.utils.network.JWTUtils
-import today.getfdp.connect.utils.other.ClassUtils
 import today.getfdp.connect.utils.other.logWarn
 import java.io.File
-import java.net.URL
 
 abstract class ResourceHolder {
 
@@ -13,7 +11,7 @@ abstract class ResourceHolder {
 
     abstract val resourcePath: String
 
-    abstract fun init(file: File)
+    protected abstract fun init(file: File)
 
     open var isLoaded = false
         protected set
@@ -42,13 +40,5 @@ abstract class ResourceHolder {
 
         init(file) // initialize resource
         isLoaded = true
-    }
-
-    companion object {
-        fun loadResources() {
-            ClassUtils.resolveInstances(ResourceHolder::class.java.`package`.name, ResourceHolder::class.java).forEach {
-                it.loadResource()
-            }
-        }
     }
 }

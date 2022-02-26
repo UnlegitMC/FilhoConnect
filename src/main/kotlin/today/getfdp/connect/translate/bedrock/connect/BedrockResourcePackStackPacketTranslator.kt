@@ -2,10 +2,8 @@ package today.getfdp.connect.translate.bedrock.connect
 
 import com.nukkitx.protocol.bedrock.packet.ResourcePackClientResponsePacket
 import com.nukkitx.protocol.bedrock.packet.ResourcePackStackPacket
-import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
-import today.getfdp.connect.utils.other.logWarn
 
 class BedrockResourcePackStackPacketTranslator : TranslatorBase<ResourcePackStackPacket> {
 

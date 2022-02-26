@@ -3,7 +3,6 @@ package today.getfdp.connect.translate.java.play
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatPacket
 import com.nukkitx.protocol.bedrock.data.command.CommandOriginData
 import com.nukkitx.protocol.bedrock.data.command.CommandOriginType
-import com.nukkitx.protocol.bedrock.packet.CommandOutputPacket
 import com.nukkitx.protocol.bedrock.packet.CommandRequestPacket
 import com.nukkitx.protocol.bedrock.packet.TextPacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider

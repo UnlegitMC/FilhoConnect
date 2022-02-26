@@ -3,6 +3,7 @@ package today.getfdp.connect.utils.other
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import java.io.File
+import java.util.*
 
 object Configuration {
 
@@ -74,8 +75,10 @@ object Configuration {
         XBOX_AUTOLOGIN("play.xbox_auto_login", true), // this stores microsoft access token
         BEDROCK_CODEC("play.bedrock_codec", "v486"), // codec version that is used to encode and decode the bedrock packet
         BEDROCK_PROTOCOL("play.bedrock_protocol", 486), // protocol version that actually sends to the server
+        LANGUAGE_CODE("play.language_code", Locale.getDefault().toString()), // language code that is used to send to the server, may affect the server's language
         DEVICE_OS("play.device_os", 7), // device os, 1 = Android, 7 = Windows 10
         SKIN_PATH("play.skin_path", "https://github.com/UnlegitMC/fc-data/raw/main/default_skin.png"), // custom skin path, but we only support default skin geometry
         BLOCK_PALETTE("mapping.block_palette", "https://github.com/CloudburstMC/Nukkit/raw/84be206437c40da83af4035e27b63cc99f375e9f/src/main/resources/runtime_block_states.dat"), // block palette url
+        BLOCK_MAPPING("mapping.block_mapping", "https://github.com/GeyserMC/mappings/raw/master/blocks.json") // java <-> bedrock block name mapping
     }
 }

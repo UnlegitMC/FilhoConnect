@@ -5,9 +5,9 @@ import com.nukkitx.protocol.bedrock.packet.SetLocalPlayerAsInitializedPacket
 import com.nukkitx.protocol.bedrock.packet.StartGamePacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
-import today.getfdp.connect.utils.protocol.PayloadEncoder
 import today.getfdp.connect.utils.game.DimensionUtils
 import today.getfdp.connect.utils.game.GameUtils
+import today.getfdp.connect.utils.protocol.PayloadEncoder
 
 
 class BedrockStartGamePacketTranslator : TranslatorBase<StartGamePacket> {
@@ -16,11 +16,15 @@ class BedrockStartGamePacketTranslator : TranslatorBase<StartGamePacket> {
         get() = StartGamePacket::class.java
 
     override fun translate(provider: BedrockProxyProvider, packet: StartGamePacket) {
+        val dim = DimensionUtils.getById(packet.dimensionId)
+
+        provider.client.thePlayer.dimension = dim
+
         // if client is not login, send login packet
         val loginPacket = ClientboundLoginPacket(packet.runtimeEntityId.toInt(), false,
             GameUtils.convertToGameMode(packet.playerGameType), GameUtils.convertToGameMode(packet.levelGameType),
             3, arrayOf("minecraft:overworld", "minecraft:the_nether", "minecraft:the_end"), // 3 dimensions
-            DimensionUtils.dimensionCodec, DimensionUtils.getById(packet.dimensionId).tag,
+            DimensionUtils.dimensionCodec, dim.tag,
             "minecraft:overworld", packet.seed.toLong(), Int.MAX_VALUE, 32, 32 /** hmm? **/,
             false, true, false, false)
         provider.packetOut(loginPacket)

@@ -3,6 +3,7 @@ package today.getfdp.connect.play
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.entity.player.ClientboundPlayerPositionPacket
 import com.nukkitx.math.vector.Vector2f
 import com.nukkitx.math.vector.Vector3f
+import today.getfdp.connect.utils.game.DimensionUtils
 
 class ThePlayer(private val client: Client) {
     var posX = 0.0
@@ -10,6 +11,7 @@ class ThePlayer(private val client: Client) {
     var posZ = 0.0
     var rotationYaw = 0f
     var rotationPitch = 0f
+    var dimension = DimensionUtils.Dimension.OVERWORLD // 默认为主世界
 
     private var teleportId = 0
 

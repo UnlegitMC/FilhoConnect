@@ -3,11 +3,11 @@ package today.getfdp.connect.network
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.network.provider.AuthenticateProvider
 import today.getfdp.connect.network.provider.BedrockProxyProvider
-import today.getfdp.connect.utils.protocol.BedrockConnections
 import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.other.Configuration
 import today.getfdp.connect.utils.other.logInfo
+import today.getfdp.connect.utils.protocol.BedrockConnections
 
 class ServerEventHandler {
 

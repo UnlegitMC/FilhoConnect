@@ -11,11 +11,14 @@ import today.getfdp.connect.console.Console
 import today.getfdp.connect.network.ServerEventHandler
 import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Server
-import today.getfdp.connect.resources.ResourceHolder
+import today.getfdp.connect.resources.BedrockBlockPaletteHolder
+import today.getfdp.connect.resources.BlockMappingHolder
+import today.getfdp.connect.resources.SkinHolder
 import today.getfdp.connect.translate.TranslateManager
 import today.getfdp.connect.utils.other.Configuration
 import today.getfdp.connect.utils.other.logError
 import java.lang.reflect.Modifier
+import java.text.DecimalFormat
 
 object FConnect {
 
@@ -51,7 +54,8 @@ object FConnect {
         // start console
         startConsole()
 
-        logger.info("Started in ${System.currentTimeMillis() - time}ms")
+        val decimalFormat = DecimalFormat("#.##")
+        logger.info("Successfully started in ${decimalFormat.format((System.currentTimeMillis() - time) / 1000f)}s!")
     }
 
     fun startConsole() {
@@ -64,11 +68,11 @@ object FConnect {
 
         Configuration.load()
 
+        loadResources()
+
         if(Configuration[Configuration.Key.XBOX_AUTOLOGIN]) {
             AutoLoginManager.load()
         }
-
-        ResourceHolder.loadResources()
 
         TranslateManager.initialize()
 
@@ -78,6 +82,17 @@ object FConnect {
         server = Server()
         server.eventHandler = ServerEventHandler()
         server.bind(Configuration[Configuration.Key.SERVER_HOST], Configuration[Configuration.Key.SERVER_PORT])
+    }
+
+    fun loadResources() {
+        val tasks = listOf(
+            SkinHolder::loadResource,
+            BedrockBlockPaletteHolder::loadResource,
+            BlockMappingHolder::loadResource
+        )
+        tasks.forEach {
+            it.invoke()
+        }
     }
 
     fun stop() {
