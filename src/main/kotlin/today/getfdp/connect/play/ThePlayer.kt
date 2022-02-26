@@ -37,11 +37,6 @@ class ThePlayer(private val client: Client) {
         rotationPitch = v3f.x
     }
 
-    fun updatePositionRotation(v3f: Vector3f, v2f: Vector2f) {
-        updatePosition(v3f)
-        updateRotation(v2f)
-    }
-
     fun teleport(dismountVehicle: Boolean = false) {
         client.send(ClientboundPlayerPositionPacket(posX, posY, posZ, rotationYaw, rotationPitch, teleportId, dismountVehicle))
         teleportId++

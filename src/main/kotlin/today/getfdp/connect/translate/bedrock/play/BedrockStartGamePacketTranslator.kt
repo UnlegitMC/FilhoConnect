@@ -31,7 +31,8 @@ class BedrockStartGamePacketTranslator : TranslatorBase<StartGamePacket> {
 
         // send client a position packet to close loading screen
         provider.client.thePlayer.runtimeId = packet.runtimeEntityId.toInt()
-        provider.client.thePlayer.updatePositionRotation(packet.playerPosition, packet.rotation)
+        provider.client.thePlayer.updatePosition(packet.playerPosition)
+        provider.client.thePlayer.updateRotation(packet.rotation)
         provider.client.thePlayer.teleport()
 
         // send weather to client

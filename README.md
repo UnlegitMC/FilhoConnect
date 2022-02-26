@@ -3,8 +3,8 @@ A proxy connects Minecraft: Bedrock Edition and Minecraft: Java Edition
 
 # Progress
 - [X] Xbox verify
-- [ ] Chunk translations
-- [ ] Move
+- [X] Chunk translations
+- [X] Move
 - [ ] See entities
 - [ ] Chat
 - [ ] Block interact
