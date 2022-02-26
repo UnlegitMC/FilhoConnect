@@ -47,7 +47,6 @@ class BedrockLoginHelper(val client: Client) {
             )}
         )}
 
-
         // we need to wrap the chain in this format: {chain: ["chain in jwt format"]}
         return json { obj(
             "chain" to array(JWTUtils.toJWT(chain.toJsonString(), keyPair))
@@ -150,10 +149,10 @@ class BedrockLoginHelper(val client: Client) {
             "PremiumSkin" to false,
             "DeviceModel" to ByteArray(random.nextInt(10) + 3).let { random.nextBytes(it); Base64.getEncoder().encodeToString(it) },
             "SelfSignedId" to UUID.randomUUID(),
-            "ThirdPartyName" to client.name,
+            "ThirdPartyName" to displayName,
             "DeviceOS" to Configuration.get<Int>(Configuration.Key.DEVICE_OS),
             "PlayFabId" to "",
-            "SkinId" to "${client.uuid}.Custom",
+            "SkinId" to "${identity}.Custom",
             "PersonaSkin" to false,
             "PersonaPieces" to array(),
             "PieceTintColors" to array(),
@@ -162,8 +161,8 @@ class BedrockLoginHelper(val client: Client) {
             "CapeImageHeight" to 0,
             "PlatformOfflineId" to "",
             "AnimatedImageData" to array(),
-            "CapeImageWidth" to 0
-        )}
+            "CapeImageWidth" to 0,
+        ) } // todo: the skin data will crash PocketMine-MP and idk why https://crash.pmmp.io/view/6033051
         return JWTUtils.toJWT(json.toJsonString(), keyPair)
     }
 

@@ -6,9 +6,13 @@ import com.github.steveice10.mc.protocol.packet.ingame.clientbound.level.Clientb
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag
 import com.github.steveice10.opennbt.tag.builtin.LongArrayTag
 import com.github.steveice10.packetlib.io.stream.StreamNetOutput
+import com.nukkitx.nbt.NBTInputStream
+import com.nukkitx.nbt.NbtMap
+import com.nukkitx.nbt.util.stream.NetworkDataInputStream
 import com.nukkitx.network.VarInts
 import com.nukkitx.protocol.bedrock.packet.LevelChunkPacket
 import io.netty.buffer.ByteBuf
+import io.netty.buffer.ByteBufInputStream
 import io.netty.buffer.Unpooled
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.resources.BedrockBlockPaletteHolder
@@ -18,6 +22,7 @@ import today.getfdp.connect.utils.game.DimensionUtils
 import today.getfdp.connect.utils.level.BitArrayVersion
 import java.io.ByteArrayOutputStream
 import java.util.*
+
 
 /**
  * some of the code is from TunnelMC https://github.com/THEREALWWEFAN231/TunnelMC/blob/432014f75aef85fa42436fd9d4756c8625b9aed0/src/main/java/me/THEREALWWEFAN231/tunnelmc/translator/packet/world/LevelChunkTranslator.java
@@ -111,31 +116,54 @@ class BedrockLevelChunkPacketTranslator : TranslatorBase<LevelChunkPacket> {
 
             val paletteSize = VarInts.readInt(byteBuf)
             val sectionPalette = IntArray(paletteSize)
-//            val nbtStream = if (isRuntime) null else NBTInputStream(NetworkDataInputStream(ByteBufInputStream(byteBuf)))
+            val nbtStream = if (isRuntime) null else NBTInputStream(NetworkDataInputStream(ByteBufInputStream(byteBuf)))
             for (i in 0 until paletteSize) {
                 if (isRuntime) {
                     sectionPalette[i] = VarInts.readInt(byteBuf)
                 } else {
-                    TODO("not implemented")
+                    val map = (nbtStream!!.readTag() as NbtMap).toBuilder()
+                    val name = map["name"].toString()
+                    map.replace("name", if(!name.startsWith("minecraft:")) {
+                        // For some reason, persistent chunks don't include the "minecraft:" that should be used in state names.
+                        "minecraft:$name"
+                    } else {
+                        name
+                    })
+                    sectionPalette[i] = BedrockBlockPaletteHolder.blockToRuntime[BedrockBlockPaletteHolder.getBlockNameFromNbtMap(map.build())] ?: BedrockBlockPaletteHolder.airId
                 }
             }
 
-            if (it == 0) {
-                var index = 0
-                for (x in 0..15) {
-                    for (z in 0..15) {
-                        for (y in 0..15) {
-                            val paletteIndex = bitArray[index]
-                            val mcbeBlockId = sectionPalette[paletteIndex]
-                            val name = BedrockBlockPaletteHolder.blocks[mcbeBlockId] ?: continue
-                            val block = BlockMappingHolder.javaBlockToState[BlockMappingHolder.bedrockToJava[name]] ?: continue
-                            chunkSection.setBlock(x, y, z, block)
-                            index++
+
+            var index = 0
+            for (x in 0..15) {
+                for (z in 0..15) {
+                    for (y in 0..15) {
+                        val paletteIndex = bitArray[index]
+                        val bedrockId = sectionPalette[paletteIndex]
+                        val name = BedrockBlockPaletteHolder.runtimeToBlock[bedrockId]
+                        if (name == null) {
+                            BedrockBlockPaletteHolder.logUnknownBlock(bedrockId)
                         }
+                        if (it == 0) {
+                            val javaName = BlockMappingHolder.bedrockToJava[name]
+                            if (javaName == null) {
+                                BlockMappingHolder.logUnknownBlock(name ?: "null")
+                            }
+                            val block = BlockMappingHolder.javaBlockToState[BlockMappingHolder.bedrockToJava[name]] ?: 1
+                            chunkSection.setBlock(x, y, z, block)
+                        } else {
+                            if(bedrockId == BedrockBlockPaletteHolder.airId) {
+                                // waterlogged
+                                if(BlockMappingHolder.bedrockToJava[name]?.startsWith("minecraft:water") == true) {
+                                    val originName = BlockMappingHolder.javaStateToBlock[chunkSection.getBlock(x, y, z)] ?: continue
+                                    chunkSection.setBlock(x, y, z,
+                                        BlockMappingHolder.javaBlockToState[originName.replace("waterlogged=false", "waterlogged=true")] ?: continue)
+                                }
+                            }
+                        }
+                        index++
                     }
                 }
-            } else {
-                // todo: waterlogged
             }
         }
     }
@@ -156,9 +184,9 @@ class BedrockLevelChunkPacketTranslator : TranslatorBase<LevelChunkPacket> {
                     val idx = (x shl 8) + (z shl 4) + y
                     val id = blockIds[idx].toInt()
                     val meta = metaIds[idx shr 1].toInt() shr (idx and 1) * 4 and 15
-                    val name = BedrockBlockPaletteHolder.legacyBlocks[id shl 6 or meta] ?: continue
+                    val name = BedrockBlockPaletteHolder.legacyBlocks[id shl 6 or meta] ?: "minecraft:stone"
                     chunkSection.setBlock(x, y, z,
-                        BlockMappingHolder.javaBlockToState[BlockMappingHolder.bedrockToJava[name] ?: continue] ?: 1)
+                        BlockMappingHolder.javaBlockToState[BlockMappingHolder.bedrockToJava[name]] ?: 1)
                 }
             }
         }
@@ -175,7 +203,7 @@ class BedrockLevelChunkPacketTranslator : TranslatorBase<LevelChunkPacket> {
         }
     }
 
-//    override fun async(): Boolean {
-//        return true
-//    }
+    override fun async(): Boolean {
+        return true
+    }
 }

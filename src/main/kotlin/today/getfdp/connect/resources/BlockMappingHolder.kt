@@ -1,8 +1,12 @@
 package today.getfdp.connect.resources
 
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import today.getfdp.connect.FConnect
 import today.getfdp.connect.utils.network.JWTUtils
 import today.getfdp.connect.utils.other.Configuration
+import today.getfdp.connect.utils.other.logError
 import java.io.File
 
 object BlockMappingHolder : ResourceHolder() {
@@ -13,6 +17,9 @@ object BlockMappingHolder : ResourceHolder() {
 
     val bedrockToJava = mutableMapOf<String, String>()
     val javaBlockToState = mutableMapOf<String, Int>()
+    val javaStateToBlock = mutableMapOf<Int, String>()
+
+    private val loggedUnknownBlocks = mutableSetOf<String>()
 
     override fun init(file: File) {
         val json = JsonParser().parse(file.reader(Charsets.UTF_8)).asJsonObject
@@ -39,17 +46,39 @@ object BlockMappingHolder : ResourceHolder() {
                     sb.append(key)
                     sb.append("=")
                     sb.append(value)
-                    sb.append(", ")
+                    sb.append(",")
                 }
-                sb.delete(sb.length - 2, sb.length)
+                sb.delete(sb.length - 1, sb.length)
                 sb.append("]")
             }
             val name = sb.toString()
 
-            bedrockToJava[name] = key
+            if(!key.contains("waterlogged=true")) { // waterlogged blocks in bedrock is not in this format
+                bedrockToJava[name] = key
+            }
             javaBlockToState[key] = index
+            javaStateToBlock[index] = key
 
             index++
+        }
+
+        addPatches()
+    }
+
+    /**
+     * add patches not in geyser block mapping
+     */
+    private fun addPatches() {
+        val json = FConnect.parser.parse(this.javaClass.getResourceAsStream("/fc-data/addition_blocks.json")) as com.beust.klaxon.JsonObject
+        json.forEach { (key, value) ->
+            bedrockToJava[key] = value.toString()
+        }
+    }
+
+    fun logUnknownBlock(name: String) {
+        if(!loggedUnknownBlocks.contains(name)) {
+            logError("Unable to find mapping for block $name")
+            loggedUnknownBlocks.add(name)
         }
     }
 }
