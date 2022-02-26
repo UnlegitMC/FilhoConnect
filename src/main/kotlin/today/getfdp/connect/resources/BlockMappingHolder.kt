@@ -1,7 +1,5 @@
 package today.getfdp.connect.resources
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import today.getfdp.connect.FConnect
 import today.getfdp.connect.utils.network.JWTUtils

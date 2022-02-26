@@ -79,6 +79,7 @@ object Configuration {
         DEVICE_OS("play.device_os", 7), // device os, 1 = Android, 7 = Windows 10
         SKIN_PATH("play.skin_path", "https://github.com/UnlegitMC/fc-data/raw/main/default_skin.png"), // custom skin path, but we only support default skin geometry
         BLOCK_PALETTE("mapping.block_palette", "https://github.com/CloudburstMC/Nukkit/raw/84be206437c40da83af4035e27b63cc99f375e9f/src/main/resources/runtime_block_states.dat"), // block palette url
-        BLOCK_MAPPING("mapping.block_mapping", "https://github.com/GeyserMC/mappings/raw/master/blocks.json") // java <-> bedrock block name mapping
+        BIOME_MAPPING("mapping.biome_mapping", "https://github.com/GeyserMC/mappings/raw/64f338a2670bb8d300a66975389fc7887df4c4de/biomes.json"), // java <-> bedrock block name mapping
+        BLOCK_MAPPING("mapping.block_mapping", "https://github.com/GeyserMC/mappings/raw/64f338a2670bb8d300a66975389fc7887df4c4de/blocks.json"), // java <-> bedrock block name mapping
     }
 }

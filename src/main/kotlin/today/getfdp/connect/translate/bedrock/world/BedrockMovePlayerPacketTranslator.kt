@@ -2,7 +2,6 @@ package today.getfdp.connect.translate.bedrock.world
 
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
-import today.getfdp.connect.play.ThePlayer
 import today.getfdp.connect.translate.TranslatorBase
 
 class BedrockMovePlayerPacketTranslator : TranslatorBase<MovePlayerPacket> {

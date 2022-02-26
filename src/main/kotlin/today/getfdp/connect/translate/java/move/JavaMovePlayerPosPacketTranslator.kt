@@ -1,7 +1,6 @@
 package today.getfdp.connect.translate.java.move
 
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosPacket
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosRotPacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 

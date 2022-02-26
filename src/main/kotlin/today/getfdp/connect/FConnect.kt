@@ -12,6 +12,7 @@ import today.getfdp.connect.network.ServerEventHandler
 import today.getfdp.connect.play.AutoLoginManager
 import today.getfdp.connect.play.Server
 import today.getfdp.connect.resources.BedrockBlockPaletteHolder
+import today.getfdp.connect.resources.BiomeMappingHolder
 import today.getfdp.connect.resources.BlockMappingHolder
 import today.getfdp.connect.resources.SkinHolder
 import today.getfdp.connect.translate.TranslateManager
@@ -88,7 +89,8 @@ object FConnect {
         val tasks = listOf(
             SkinHolder::loadResource,
             BedrockBlockPaletteHolder::loadResource,
-            BlockMappingHolder::loadResource
+            BlockMappingHolder::loadResource,
+            BiomeMappingHolder::loadResource
         )
         tasks.forEach {
             it.invoke()

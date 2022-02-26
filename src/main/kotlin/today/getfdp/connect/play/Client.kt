@@ -24,7 +24,7 @@ class Client(val session: Session) {
     val uuid: UUID
         get() = profile.id
 
-    val flags = mutableMapOf<String, Any>()
+    var commandsEnabled = true
 
     // objects to store in-game data
     val thePlayer = ThePlayer(this)
