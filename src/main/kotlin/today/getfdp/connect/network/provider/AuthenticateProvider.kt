@@ -73,10 +73,10 @@ class AuthenticateProvider : PlayProvider() {
                 client.chat("§c§lIllegal input! Input should like this format: §r§6https://login.live.com/oauth20_desktop.srf?code=M.R3_BL2.00000000-0000-0000-0000-000000000000&lc=1033")
             }
         } else if (packet is ServerboundSwingPacket) {
-            if(Configuration[Configuration.Key.XBOX_AUTOLOGIN] && AutoLoginManager[client.name] != null) {
+            if(Configuration[Configuration.Key.XBOX_AUTOLOGIN] && AutoLoginManager[client.name] != null && !inLoginProcess) {
                 client.chat("§aTrying autologin...")
+                inLoginProcess = true
                 thread {
-                    inLoginProcess = true
                     submitToken(AutoLoginManager[client.name]!!)
                     try {
                     } catch (t: Throwable) {

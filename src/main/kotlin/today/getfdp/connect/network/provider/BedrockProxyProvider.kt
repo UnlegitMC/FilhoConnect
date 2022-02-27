@@ -61,7 +61,6 @@ class BedrockProxyProvider : PlayProvider() {
     }
 
     fun bedrockPacketIn(packet: BedrockPacket) {
-        File("bedrock.log").appendText(packet.toString() + "\n")
         TranslateManager.handle(this, packet)
     }
 

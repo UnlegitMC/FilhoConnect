@@ -10,6 +10,7 @@ import com.nukkitx.protocol.bedrock.data.PlayerAuthInputData
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket
 import com.nukkitx.protocol.bedrock.packet.PlayerAuthInputPacket
 import today.getfdp.connect.utils.game.DimensionUtils
+import today.getfdp.connect.utils.other.Configuration
 
 class ThePlayer(private val client: Client) {
     var posX = 0.0
@@ -26,7 +27,13 @@ class ThePlayer(private val client: Client) {
     private var teleportId = 0
     private var tick = 0L
 
+    private var preX = 0.0
+    private var preY = 0.0
+    private var preZ = 0.0
+
     var movementMode = AuthoritativeMovementMode.CLIENT
+    var blockPlaceAuth = false
+    val authInputMode = InputMode.valueOf(Configuration[Configuration.Key.AUTH_INPUT_MODE])
 
     fun updatePosition(v3f: Vector3f) {
         posX = v3f.x.toDouble()
@@ -79,12 +86,17 @@ class ThePlayer(private val client: Client) {
             packet.rotation = Vector3f.from(rotationPitch, rotationYaw, rotationYaw)
             packet.motion = Vector2f.ZERO
             packet.inputData.apply { clear() }.add(PlayerAuthInputData.PERSIST_SNEAK)
-            packet.inputMode = InputMode.TOUCH
+            packet.inputMode = authInputMode
             packet.playMode = ClientPlayMode.NORMAL
             packet.tick = tick++
+            packet.delta = Vector3f.from(posX - preX, posY - preY, posZ - preZ)
 
             client.send(packet)
         }
+
+        preX = posX
+        preY = posY
+        preZ = posZ
     }
 
     companion object {

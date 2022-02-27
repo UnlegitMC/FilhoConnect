@@ -35,6 +35,7 @@ class BedrockStartGamePacketTranslator : TranslatorBase<StartGamePacket> {
         provider.client.thePlayer.updateRotation(packet.rotation)
         provider.client.thePlayer.teleport()
         provider.client.thePlayer.movementMode = packet.playerMovementSettings.movementMode
+        provider.client.thePlayer.blockPlaceAuth = packet.playerMovementSettings.isServerAuthoritativeBlockBreaking
 
         // send weather to client
         provider.client.theWorld.rain = packet.rainLevel
@@ -50,6 +51,8 @@ class BedrockStartGamePacketTranslator : TranslatorBase<StartGamePacket> {
         tickSyncPacket.requestTimestamp = 0
         tickSyncPacket.responseTimestamp = 0
         provider.bedrockPacketOut(tickSyncPacket)
+
+        provider.client.thePlayer.move()
 
         // send brand info
         PayloadEncoder.sendBrand(provider.client.session)
