@@ -88,8 +88,8 @@ class BedrockLevelChunkPacketTranslator : TranslatorBase<LevelChunkPacket> {
 
                 var index = 0
                 for (x in 0..3) {
-                    for (z in 0..3) {
-                        for (y in 0..3) {
+                    for (y in 0..3) {
+                        for (z in 0..3) {
                             val bedrockId = storage.get(x * 4, y * 4, z * 4)
                             val javaId = BiomeMappingHolder.javaToRuntime[BiomeMappingHolder.bedrockToJava[bedrockId] ?: "minecraft:the_void"] ?: 0
 

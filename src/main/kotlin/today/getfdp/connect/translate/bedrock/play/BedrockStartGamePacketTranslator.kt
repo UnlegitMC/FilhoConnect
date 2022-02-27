@@ -43,7 +43,7 @@ class BedrockStartGamePacketTranslator : TranslatorBase<StartGamePacket> {
         // tell bedrock server we are ready to play
         val setLocalPlayerAsInitializedPacket = SetLocalPlayerAsInitializedPacket()
         setLocalPlayerAsInitializedPacket.runtimeEntityId = packet.runtimeEntityId
-        provider.bedrockPacketOut(setLocalPlayerAsInitializedPacket)
+        provider.bedrockPacketOut(setLocalPlayerAsInitializedPacket, immediate = true)
 
         // send brand info
         PayloadEncoder.sendBrand(provider.client.session)

@@ -125,7 +125,7 @@ class BedrockLoginHelper(val client: Client) {
     fun skin(): String {
         val random = Random() // used to generate random data
         val json = json { obj(
-            "UIProfile" to 1,
+            "UIProfile" to 0,
             "CapeOnClassicSkin" to false,
             "SkinData" to SkinHolder.skinBase64,
             "SkinImageWidth" to SkinHolder.skinWidth,
@@ -147,8 +147,8 @@ class BedrockLoginHelper(val client: Client) {
             "SkinGeometryDataEngineVersion" to "MC4wLjA=", // 0.0.0
             "DefaultInputMode" to 2,
             "PremiumSkin" to false,
-            "DeviceModel" to ByteArray(random.nextInt(10) + 3).let { random.nextBytes(it); Base64.getEncoder().encodeToString(it) },
-            "SelfSignedId" to UUID.randomUUID(),
+            "DeviceModel" to Base64.getEncoder().encodeToString(ByteArray(random.nextInt(10) + 3).also { random.nextBytes(it) }),
+            "SelfSignedId" to UUID.randomUUID().toString(),
             "ThirdPartyName" to displayName,
             "DeviceOS" to Configuration.get<Int>(Configuration.Key.DEVICE_OS),
             "PlayFabId" to "",
@@ -162,7 +162,7 @@ class BedrockLoginHelper(val client: Client) {
             "PlatformOfflineId" to "",
             "AnimatedImageData" to array(),
             "CapeImageWidth" to 0,
-        ) } // todo: the skin data will crash PocketMine-MP and idk why https://crash.pmmp.io/view/6033051
+        ) }
         return JWTUtils.toJWT(json.toJsonString(), keyPair)
     }
 
