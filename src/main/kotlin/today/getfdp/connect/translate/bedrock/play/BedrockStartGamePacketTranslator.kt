@@ -1,8 +1,8 @@
 package today.getfdp.connect.translate.bedrock.play
 
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundLoginPacket
-import com.nukkitx.protocol.bedrock.packet.SetLocalPlayerAsInitializedPacket
-import com.nukkitx.protocol.bedrock.packet.StartGamePacket
+import com.nukkitx.math.vector.Vector3f
+import com.nukkitx.protocol.bedrock.packet.*
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 import today.getfdp.connect.utils.game.DimensionUtils
@@ -34,6 +34,7 @@ class BedrockStartGamePacketTranslator : TranslatorBase<StartGamePacket> {
         provider.client.thePlayer.updatePosition(packet.playerPosition)
         provider.client.thePlayer.updateRotation(packet.rotation)
         provider.client.thePlayer.teleport()
+        provider.client.thePlayer.movementMode = packet.playerMovementSettings.movementMode
 
         // send weather to client
         provider.client.theWorld.rain = packet.rainLevel
@@ -41,11 +42,19 @@ class BedrockStartGamePacketTranslator : TranslatorBase<StartGamePacket> {
         provider.client.theWorld.update()
 
         // tell bedrock server we are ready to play
-        val setLocalPlayerAsInitializedPacket = SetLocalPlayerAsInitializedPacket()
-        setLocalPlayerAsInitializedPacket.runtimeEntityId = packet.runtimeEntityId
-        provider.bedrockPacketOut(setLocalPlayerAsInitializedPacket, immediate = true)
+        val requestChunkRadiusPacket = RequestChunkRadiusPacket() // we need to request chunks, or we will get no chunks on pmmp servers
+        requestChunkRadiusPacket.radius = 16
+        provider.bedrockPacketOut(requestChunkRadiusPacket)
+
+        val tickSyncPacket = TickSyncPacket()
+        tickSyncPacket.requestTimestamp = 0
+        tickSyncPacket.responseTimestamp = 0
+        provider.bedrockPacketOut(tickSyncPacket)
 
         // send brand info
         PayloadEncoder.sendBrand(provider.client.session)
+
+        provider.client.title("")
+        provider.client.subtitle("")
     }
 }

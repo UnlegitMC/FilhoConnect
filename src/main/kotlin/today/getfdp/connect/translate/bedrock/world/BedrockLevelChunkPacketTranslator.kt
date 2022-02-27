@@ -82,22 +82,30 @@ class BedrockLevelChunkPacketTranslator : TranslatorBase<LevelChunkPacket> {
             }
 
             // read the biome data
+            var has0Ver = false
             repeat(packet.subChunksLength) { // bedrock has hardcoded biome count to 24, but we just want to read the biome data with blocks in it
-                val storage = PalettedStorage(byteBuf)
+                val header = byteBuf.readByte().toInt()
+                val paletteVersion = if(has0Ver) 0 else header or 1 shr 1
                 val biomeData = chunkSections[it].biomeData
+                if(paletteVersion != 0) {
+                    val storage = PalettedStorage(byteBuf, header)
 
-                var index = 0
-                for (x in 0..3) {
-                    for (y in 0..3) {
-                        for (z in 0..3) {
-                            val bedrockId = storage.get(x * 4, y * 4, z * 4)
-                            val javaId = BiomeMappingHolder.javaToRuntime[BiomeMappingHolder.bedrockToJava[bedrockId] ?: "minecraft:the_void"] ?: 0
+                    var index = 0
+                    for (x in 0..3) {
+                        for (y in 0..3) {
+                            for (z in 0..3) {
+                                val bedrockId = storage.get(x * 4, y * 4, z * 4)
+                                val javaId = BiomeMappingHolder.javaToRuntime[BiomeMappingHolder.bedrockToJava[bedrockId] ?: "minecraft:the_void"] ?: 0
 
-                            biomeData.storage[index] = biomeData.palette.stateToId(javaId).coerceAtLeast(0)
+                                biomeData.storage[index] = biomeData.palette.stateToId(javaId).coerceAtLeast(0)
 
-                            index++
+                                index++
+                            }
                         }
                     }
+                } else {
+                    has0Ver = true
+                    fillPalette(biomeData) // todo: translate palette with version 0
                 }
             }
 

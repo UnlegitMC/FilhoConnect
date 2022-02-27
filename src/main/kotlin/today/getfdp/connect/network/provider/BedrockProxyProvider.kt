@@ -11,6 +11,7 @@ import today.getfdp.connect.translate.TranslateManager
 import today.getfdp.connect.utils.other.Configuration
 import today.getfdp.connect.utils.other.logWarn
 import today.getfdp.connect.utils.protocol.BedrockConnections
+import java.io.File
 
 
 /**
@@ -60,7 +61,7 @@ class BedrockProxyProvider : PlayProvider() {
     }
 
     fun bedrockPacketIn(packet: BedrockPacket) {
-//        println(packet)
+        File("bedrock.log").appendText(packet.toString() + "\n")
         TranslateManager.handle(this, packet)
     }
 

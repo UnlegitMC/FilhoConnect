@@ -15,16 +15,12 @@ class JavaChatPacketTranslator : TranslatorBase<ServerboundChatPacket> {
 
     override fun translate(provider: BedrockProxyProvider, packet: ServerboundChatPacket) {
         if(packet.message.startsWith("/")) {
-            if(provider.client.commandsEnabled) {
-                val commandPacket = CommandRequestPacket()
-                commandPacket.command = packet.message
-                commandPacket.isInternal = false
-                commandPacket.commandOriginData = CommandOriginData(CommandOriginType.PLAYER,
-                    provider.client.loginHelper.identity, "", 0L)
-                provider.bedrockPacketOut(commandPacket)
-            } else {
-                provider.client.chat("§cCommands are disabled on this server.")
-            }
+            val commandPacket = CommandRequestPacket()
+            commandPacket.command = packet.message
+            commandPacket.isInternal = false
+            commandPacket.commandOriginData = CommandOriginData(CommandOriginType.PLAYER,
+                provider.client.loginHelper.identity, "", 0L)
+            provider.bedrockPacketOut(commandPacket)
         } else {
             val textPacket = TextPacket()
             textPacket.message = packet.message

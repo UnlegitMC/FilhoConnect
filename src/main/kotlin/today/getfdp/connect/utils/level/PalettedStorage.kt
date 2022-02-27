@@ -8,13 +8,13 @@ import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufInputStream
 import today.getfdp.connect.resources.BedrockBlockPaletteHolder
 
-class PalettedStorage(byteBuf: ByteBuf) {
+class PalettedStorage(byteBuf: ByteBuf, header: Int? = null) {
 
     val bitArray: BitArray
     val palette: IntArray
 
     init {
-        val paletteHeader = byteBuf.readByte().toInt()
+        val paletteHeader = header ?: byteBuf.readByte().toInt()
         val isRuntime = (paletteHeader and 1) == 1
         val paletteVersion = paletteHeader or 1 shr 1
 
