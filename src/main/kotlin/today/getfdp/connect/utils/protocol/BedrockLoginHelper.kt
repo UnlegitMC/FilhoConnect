@@ -30,8 +30,6 @@ class BedrockLoginHelper(val client: Client) {
         private set
 
     fun offlineChain(): String {
-        // So we need to assign the a uuid from a username, or else everytime we join a server with the same name, we will get reset(as if we are a new player)
-        // Java does it this way, I'm not sure if bedrock does but it gets our goal accomplished, PlayerEntity.getOfflinePlayerUuid
         this.displayName = client.name
         this.identity = UUID.nameUUIDFromBytes("OfflinePlayer:$displayName".toByteArray())
         this.xuid = identity.leastSignificantBits.toString()
@@ -54,25 +52,6 @@ class BedrockLoginHelper(val client: Client) {
     }
 
     fun onlineChain(): String {
-        val mcChain = getMojangOnlineChain()
-
-        // this minecraft chain is login-able, but we should get player name or other thingy from it
-        val chains = JWTUtils.parseJsonObj(mcChain).array<String>("chain")!! // the "chain" array must be exists
-        chains.forEach { chain ->
-            // chain must be a JWT, at least I think...
-            val payload = JWTUtils.parseJsonObj(Base64.getDecoder().decode(chain.split(".")[1]).toString(Charsets.UTF_8))
-            if(payload.containsKey("extraData")) {
-                val extraData = payload.obj("extraData")!!
-                this.displayName = extraData.string("displayName")!!
-                this.identity = UUID.fromString(extraData.string("identity")!!)
-                this.xuid = extraData.string("XUID")!!
-            }
-        }
-
-        return mcChain
-    }
-
-    private fun getMojangOnlineChain(): String {
         val accessToken = AutoLoginManager.accessTokens.remove(client.name) ?: kotlin.run {
             client.disconnect("Unable to find access token for ${client.name}")
             throw IllegalStateException("Unable to find access token for ${client.name}")
@@ -114,12 +93,50 @@ class BedrockLoginHelper(val client: Client) {
         return connection.inputStream.reader().readText()
     }
 
-    fun chain(): String {
-        return if(Configuration[Configuration.Key.ONLINE_MODE]) {
-            onlineChain()
-        } else {
-            offlineChain()
+    fun readDataFromChain(mcChain: String) {
+        if(this::displayName.isInitialized) return // already read
+
+        // this minecraft chain is login-able, but we should get player name or other thingy from it
+        val chains = JWTUtils.parseJsonObj(mcChain).array<String>("chain")!! // the "chain" array must be exists
+        chains.forEach { chain ->
+            // chain must be a JWT, at least I think...
+            val payload = JWTUtils.parseJsonObj(Base64.getDecoder().decode(chain.split(".")[1]).toString(Charsets.UTF_8))
+            if(payload.containsKey("extraData")) {
+                val extraData = payload.obj("extraData")!!
+                this.displayName = extraData.string("displayName")!!
+                this.identity = UUID.fromString(extraData.string("identity")!!)
+                this.xuid = extraData.string("XUID")!!
+            }
         }
+    }
+
+    fun customChain(): String {
+        val file = File("chains/${client.name}.json")
+        if(!file.exists()) {
+            throw IllegalStateException("Unable to find custom chain for ${client.name}")
+        }
+        return file.readText()
+    }
+
+    fun chain(): String {
+        val mode = Configuration.Key.ONLINE_MODE.value.let {
+            if(it is Boolean) {
+                if (it) "ONLINE" else "OFFLINE"
+            } else {
+                it.toString().uppercase()
+            }
+        }
+        val chain = if(mode == "ONLINE") {
+            onlineChain()
+        } else if(mode == "OFFLINE") {
+            offlineChain()
+        } else if(mode == "CUSTOM") {
+            customChain()
+        } else {
+            throw UnsupportedOperationException("Unknown authentication mode: $mode")
+        }
+        readDataFromChain(chain)
+        return chain
     }
 
     fun skin(): String {
