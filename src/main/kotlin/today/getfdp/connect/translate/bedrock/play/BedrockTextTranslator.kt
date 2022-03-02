@@ -33,7 +33,7 @@ class BedrockTextTranslator : TranslatorBase<TextPacket> {
         private val translatableRegex = Regex("%[a-z,.]{3,}")
 
         fun processTranslatable(message: String, parameters: List<String>): Component {
-            val componentParameters = parameters.map { Component.text(it) }
+            val componentParameters = parameters.map { processTranslatable(it, emptyList()) }
             if(!message.contains("%")) {
                 return Component.translatable(message, componentParameters)
             }

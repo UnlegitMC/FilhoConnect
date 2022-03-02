@@ -1,5 +1,6 @@
 package today.getfdp.connect.translate.bedrock.play
 
+import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundChangeDifficultyPacket
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundLoginPacket
 import com.nukkitx.protocol.bedrock.packet.StartGamePacket
 import com.nukkitx.protocol.bedrock.packet.TickSyncPacket
@@ -28,6 +29,7 @@ class BedrockStartGameTranslator : TranslatorBase<StartGamePacket> {
             "minecraft:overworld", packet.seed.toLong(), Int.MAX_VALUE, 32, 32 /** hmm? **/,
             false, true, false, false)
         provider.packetOut(loginPacket)
+        provider.packetOut(ClientboundChangeDifficultyPacket(GameUtils.getDifficulty(packet.difficulty), false))
 
         // send client a position packet to close loading screen
         provider.client.thePlayer.runtimeId = packet.runtimeEntityId.toInt()

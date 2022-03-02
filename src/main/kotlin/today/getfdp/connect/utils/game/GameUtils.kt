@@ -1,10 +1,14 @@
 package today.getfdp.connect.utils.game
 
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode
+import com.github.steveice10.mc.protocol.data.game.setting.Difficulty
 import com.nukkitx.protocol.bedrock.data.GameType
 import net.kyori.adventure.text.format.NamedTextColor
+import org.jline.utils.DiffHelper.Diff
 
 object GameUtils {
+
+    private val difficulties = Difficulty.values() // this will improve performance
 
     fun convertToGameMode(gameType: GameType): GameMode {
         return when(gameType) {
@@ -14,6 +18,10 @@ object GameUtils {
             GameType.SURVIVAL_VIEWER, GameType.CREATIVE_VIEWER -> GameMode.SPECTATOR
             else -> GameMode.UNKNOWN // these game types are not exists in Java Edition
         }
+    }
+
+    fun getDifficulty(code: Int): Difficulty {
+        return difficulties.getOrNull(code) ?: Difficulty.NORMAL
     }
 
     fun getColorByCode(code: String): NamedTextColor {
