@@ -4,7 +4,7 @@ import com.nukkitx.protocol.bedrock.packet.SetCommandsEnabledPacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 
-class BedrockSetCommandsEnabledPacketTranslator : TranslatorBase<SetCommandsEnabledPacket> {
+class BedrockSetCommandsEnabledTranslator : TranslatorBase<SetCommandsEnabledPacket> {
 
     override val intendedClass: Class<SetCommandsEnabledPacket>
         get() = SetCommandsEnabledPacket::class.java

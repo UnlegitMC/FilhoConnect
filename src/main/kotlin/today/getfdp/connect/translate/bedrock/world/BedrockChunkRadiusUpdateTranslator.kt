@@ -5,7 +5,7 @@ import com.nukkitx.protocol.bedrock.packet.ChunkRadiusUpdatedPacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 
-class BedrockChunkRadiusUpdatePacketTranslator : TranslatorBase<ChunkRadiusUpdatedPacket> {
+class BedrockChunkRadiusUpdateTranslator : TranslatorBase<ChunkRadiusUpdatedPacket> {
 
     override val intendedClass: Class<ChunkRadiusUpdatedPacket>
         get() = ChunkRadiusUpdatedPacket::class.java

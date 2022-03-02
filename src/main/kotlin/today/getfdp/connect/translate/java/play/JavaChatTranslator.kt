@@ -8,7 +8,7 @@ import com.nukkitx.protocol.bedrock.packet.TextPacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 
-class JavaChatPacketTranslator : TranslatorBase<ServerboundChatPacket> {
+class JavaChatTranslator : TranslatorBase<ServerboundChatPacket> {
 
     override val intendedClass: Class<ServerboundChatPacket>
         get() = ServerboundChatPacket::class.java

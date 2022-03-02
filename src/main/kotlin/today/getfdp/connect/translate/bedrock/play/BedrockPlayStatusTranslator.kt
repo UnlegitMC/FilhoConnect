@@ -5,7 +5,7 @@ import com.nukkitx.protocol.bedrock.packet.*
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 
-class BedrockPlayStatusPacketTranslator : TranslatorBase<PlayStatusPacket> {
+class BedrockPlayStatusTranslator : TranslatorBase<PlayStatusPacket> {
 
     override val intendedClass: Class<PlayStatusPacket>
         get() = PlayStatusPacket::class.java
@@ -26,6 +26,16 @@ class BedrockPlayStatusPacketTranslator : TranslatorBase<PlayStatusPacket> {
                 val setLocalPlayerAsInitializedPacket = SetLocalPlayerAsInitializedPacket()
                 setLocalPlayerAsInitializedPacket.runtimeEntityId = provider.client.thePlayer.runtimeId.toLong()
                 provider.bedrockPacketOut(setLocalPlayerAsInitializedPacket)
+            }
+
+            PlayStatusPacket.Status.LOGIN_SUCCESS -> {
+                val clientCacheStatusPacket = ClientCacheStatusPacket() // this packet should be sent after server accepted login
+                clientCacheStatusPacket.isSupported = true
+                provider.bedrockPacketOut(clientCacheStatusPacket)
+            }
+
+            else -> {
+                provider.client.disconnect("Failed to login: ${packet.status}")
             }
         }
     }

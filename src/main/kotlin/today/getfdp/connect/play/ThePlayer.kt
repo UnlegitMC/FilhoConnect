@@ -97,6 +97,8 @@ class ThePlayer(private val client: Client) {
         preX = posX
         preY = posY
         preZ = posZ
+
+        client.theWorld.update() // update world things when player tick
     }
 
     companion object {

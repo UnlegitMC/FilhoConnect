@@ -4,7 +4,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.Server
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 
-class JavaMovePlayerStatusOnlyPacketTranslator : TranslatorBase<ServerboundMovePlayerStatusOnlyPacket> {
+class JavaMovePlayerStatusOnlyTranslator : TranslatorBase<ServerboundMovePlayerStatusOnlyPacket> {
 
     override val intendedClass: Class<ServerboundMovePlayerStatusOnlyPacket>
         get() = ServerboundMovePlayerStatusOnlyPacket::class.java

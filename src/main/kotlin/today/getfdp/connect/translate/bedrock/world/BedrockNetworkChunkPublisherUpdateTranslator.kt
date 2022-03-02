@@ -5,7 +5,7 @@ import com.nukkitx.protocol.bedrock.packet.NetworkChunkPublisherUpdatePacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 
-class BedrockNetworkChunkPublisherUpdatePacketTranslator : TranslatorBase<NetworkChunkPublisherUpdatePacket> {
+class BedrockNetworkChunkPublisherUpdateTranslator : TranslatorBase<NetworkChunkPublisherUpdatePacket> {
 
     override val intendedClass: Class<NetworkChunkPublisherUpdatePacket>
         get() = NetworkChunkPublisherUpdatePacket::class.java

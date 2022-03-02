@@ -25,7 +25,7 @@ import java.util.*
 /**
  * some of the code is from TunnelMC https://github.com/THEREALWWEFAN231/TunnelMC/blob/432014f75aef85fa42436fd9d4756c8625b9aed0/src/main/java/me/THEREALWWEFAN231/tunnelmc/translator/packet/world/LevelChunkTranslator.java
  */
-class BedrockLevelChunkPacketTranslator : TranslatorBase<LevelChunkPacket> {
+class BedrockLevelChunkTranslator : TranslatorBase<LevelChunkPacket> {
 
     private val emptyChunkSectionBytes: ByteArray
     private val emptyHeightMap: CompoundTag

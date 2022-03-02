@@ -8,7 +8,7 @@ import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 import today.getfdp.connect.utils.game.GameUtils
 
-class BedrockTextPacketTranslator : TranslatorBase<TextPacket> {
+class BedrockTextTranslator : TranslatorBase<TextPacket> {
 
     override val intendedClass: Class<TextPacket>
         get() = TextPacket::class.java

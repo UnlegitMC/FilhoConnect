@@ -8,7 +8,7 @@ import today.getfdp.connect.translate.TranslatorBase
 import today.getfdp.connect.utils.network.JWTUtils
 import java.util.*
 
-class BedrockServerToClientHandshakePacketTranslator : TranslatorBase<ServerToClientHandshakePacket> {
+class BedrockServerToClientHandshakeTranslator : TranslatorBase<ServerToClientHandshakePacket> {
 
     override val intendedClass: Class<ServerToClientHandshakePacket>
         get() = ServerToClientHandshakePacket::class.java

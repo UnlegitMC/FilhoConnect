@@ -5,7 +5,7 @@ import com.nukkitx.protocol.bedrock.packet.ResourcePackStackPacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 
-class BedrockResourcePackStackPacketTranslator : TranslatorBase<ResourcePackStackPacket> {
+class BedrockResourcePackStackTranslator : TranslatorBase<ResourcePackStackPacket> {
 
     override val intendedClass: Class<ResourcePackStackPacket>
         get() = ResourcePackStackPacket::class.java

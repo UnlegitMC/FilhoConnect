@@ -4,7 +4,7 @@ import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
 
-class BedrockMovePlayerPacketTranslator : TranslatorBase<MovePlayerPacket> {
+class BedrockMovePlayerTranslator : TranslatorBase<MovePlayerPacket> {
 
     override val intendedClass: Class<MovePlayerPacket>
         get() = MovePlayerPacket::class.java
