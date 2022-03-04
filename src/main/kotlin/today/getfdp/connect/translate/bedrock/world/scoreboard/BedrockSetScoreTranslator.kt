@@ -16,7 +16,7 @@ class BedrockSetScoreTranslator : TranslatorBase<SetScorePacket> {
             val order = provider.client.theWorld.scoreboardSorts[info.objectiveId] ?: ScoreboardSortOrder.DESCENDING
             provider.packetOut(when(packet.action) {
                 SetScorePacket.Action.SET -> ClientboundSetScorePacket(info.name, info.objectiveId,
-                    (if(order == ScoreboardSortOrder.DESCENDING) 1 else -1) * info.score)
+                    (if(order == ScoreboardSortOrder.DESCENDING) 1 else -1) * info.score) // java edition don't support ascending :(
                 SetScorePacket.Action.REMOVE -> ClientboundSetScorePacket(info.name, info.objectiveId)
             })
         }

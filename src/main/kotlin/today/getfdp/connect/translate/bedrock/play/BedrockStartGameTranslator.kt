@@ -5,6 +5,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundLo
 import com.nukkitx.protocol.bedrock.packet.StartGamePacket
 import com.nukkitx.protocol.bedrock.packet.TickSyncPacket
 import today.getfdp.connect.network.provider.BedrockProxyProvider
+import today.getfdp.connect.play.ThePlayer
 import today.getfdp.connect.translate.TranslatorBase
 import today.getfdp.connect.utils.game.DimensionUtils
 import today.getfdp.connect.utils.game.GameUtils
@@ -33,7 +34,7 @@ class BedrockStartGameTranslator : TranslatorBase<StartGamePacket> {
 
         // send client a position packet to close loading screen
         provider.client.thePlayer.runtimeId = packet.runtimeEntityId.toInt()
-        provider.client.thePlayer.updatePosition(packet.playerPosition)
+        provider.client.thePlayer.updatePosition(packet.playerPosition.add(0.0, ThePlayer.EYE_HEIGHT, 0.0))
         provider.client.thePlayer.updateRotation(packet.rotation)
         provider.client.thePlayer.teleport()
         provider.client.thePlayer.movementMode = packet.playerMovementSettings.movementMode

@@ -7,8 +7,7 @@ import today.getfdp.connect.translate.TranslatorBase
 
 class JavaClientInformationTranslator : TranslatorBase<ServerboundClientInformationPacket> {
 
-    override val intendedClass: Class<ServerboundClientInformationPacket>
-        get() = ServerboundClientInformationPacket::class.java
+    override val intendedClass  = ServerboundClientInformationPacket::class.java
 
     override fun translate(provider: BedrockProxyProvider, packet: ServerboundClientInformationPacket) {
         val requestChunkRadiusPacket = RequestChunkRadiusPacket() // we need to request chunks, or we will get no chunks on pmmp servers

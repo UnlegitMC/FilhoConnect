@@ -12,6 +12,7 @@ import com.nukkitx.protocol.bedrock.BedrockPacket
 import net.kyori.adventure.text.Component
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.network.provider.PlayProvider
+import today.getfdp.connect.play.skin.ISkinHandler
 import today.getfdp.connect.utils.protocol.BedrockLoginHelper
 import java.util.*
 
@@ -29,6 +30,17 @@ class Client(val session: Session) {
     // objects to store in-game data
     val thePlayer = ThePlayer(this)
     val theWorld = TheWorld(this)
+
+    // fabric mods support to enhance the experience
+    val modManager = ModManager(this)
+
+    fun fixUUID(uuid: UUID): UUID {
+        return if(uuid == this.uuid) {
+            loginHelper.identity
+        } else {
+            uuid
+        }
+    }
 
     /**
      * this class stores the profile of the player in the bedrock server
