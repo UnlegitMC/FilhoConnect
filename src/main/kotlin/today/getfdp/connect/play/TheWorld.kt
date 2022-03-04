@@ -1,5 +1,6 @@
 package today.getfdp.connect.play
 
+import today.getfdp.connect.network.data.ScoreboardSortOrder
 import kotlin.math.abs
 
 class TheWorld(private val client: Client) {
@@ -7,6 +8,7 @@ class TheWorld(private val client: Client) {
     private var realThunder = 0.0f
     var rain = 0.0f
     var thunder = 0.0f
+    val scoreboardSorts = mutableMapOf<String, ScoreboardSortOrder>() // the string is scoreboard objectiveId
 
     fun update() {
         if(rain != realRain) {

@@ -5,6 +5,8 @@ import com.github.steveice10.mc.protocol.data.game.setting.Difficulty
 import com.nukkitx.protocol.bedrock.data.GameType
 import net.kyori.adventure.text.format.NamedTextColor
 import org.jline.utils.DiffHelper.Diff
+import today.getfdp.connect.network.data.ScoreboardSortOrder
+import today.getfdp.connect.utils.other.logWarn
 
 object GameUtils {
 
@@ -22,6 +24,15 @@ object GameUtils {
 
     fun getDifficulty(code: Int): Difficulty {
         return difficulties.getOrNull(code) ?: Difficulty.NORMAL
+    }
+
+    fun getScoreboardSortOrder(order: Int): ScoreboardSortOrder {
+        val sortOrder = ScoreboardSortOrder.values.getOrNull(order)
+        if (sortOrder == null) {
+            logWarn("Unknown scoreboard sort order: $order")
+            return ScoreboardSortOrder.DESCENDING
+        }
+        return sortOrder
     }
 
     fun getColorByCode(code: String): NamedTextColor {
