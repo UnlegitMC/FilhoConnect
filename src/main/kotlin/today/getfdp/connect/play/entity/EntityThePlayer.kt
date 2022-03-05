@@ -1,4 +1,4 @@
-package today.getfdp.connect.play
+package today.getfdp.connect.play.entity
 
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.entity.player.ClientboundPlayerPositionPacket
 import com.nukkitx.math.vector.Vector2f
@@ -9,18 +9,12 @@ import com.nukkitx.protocol.bedrock.data.InputMode
 import com.nukkitx.protocol.bedrock.data.PlayerAuthInputData
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket
 import com.nukkitx.protocol.bedrock.packet.PlayerAuthInputPacket
+import today.getfdp.connect.play.Client
 import today.getfdp.connect.utils.game.DimensionUtils
 import today.getfdp.connect.utils.other.Configuration
 
-class ThePlayer(private val client: Client) {
-    var posX = 0.0
-    var posY = 0.0
-    var posZ = 0.0
-    var onGround = false
-    var rotationYaw = 0f
-    var rotationPitch = 0f
-    var runtimeId = 0
-    var ridingId = 0
+class EntityThePlayer(client: Client) : EntityHuman(client) {
+
     var dimension = DimensionUtils.Dimension.OVERWORLD // 默认为主世界
     var shouldMoveRespawn = true // client will send move player packet with respawn flag when connected to server
 
@@ -35,27 +29,21 @@ class ThePlayer(private val client: Client) {
     var blockPlaceAuth = false
     val authInputMode = InputMode.valueOf(Configuration[Configuration.Key.AUTH_INPUT_MODE])
 
-    fun updatePosition(v3f: Vector3f) {
-        posX = v3f.x.toDouble()
-        posY = v3f.y.toDouble() - EYE_HEIGHT
-        posZ = v3f.z.toDouble()
+    init {
+        spawned = true
     }
 
-    fun updateRotation(v2f: Vector2f) {
-        // keep attention: rotation.y is yaw, rotation.x is pitch
-        rotationYaw = v2f.y
-        rotationPitch = v2f.x
-    }
+    override fun spawn() { }
 
-    fun updateRotation(v3f: Vector3f) {
-        // keep attention: rotation.y is yaw, rotation.x is pitch
-        rotationYaw = v3f.y
-        rotationPitch = v3f.x
-    }
+    override fun despawn() { }
 
     fun teleport(dismountVehicle: Boolean = false) {
         client.send(ClientboundPlayerPositionPacket(posX, posY, posZ, rotationYaw, rotationPitch, teleportId, dismountVehicle))
         teleportId++
+    }
+
+    override fun move() {
+        this.move(MovePlayerPacket.Mode.NORMAL)
     }
 
     fun move(mode: MovePlayerPacket.Mode = MovePlayerPacket.Mode.NORMAL) {
@@ -99,9 +87,5 @@ class ThePlayer(private val client: Client) {
         preZ = posZ
 
         client.theWorld.update() // update world things when player tick
-    }
-
-    companion object {
-        const val EYE_HEIGHT = 1.62
     }
 }

@@ -18,7 +18,7 @@ class BedrockPlayerListTranslator : TranslatorBase<PlayerListPacket> {
     override fun translate(provider: BedrockProxyProvider, packet: PlayerListPacket) {
         val entries = packet.entries.map { entry ->
             val uuid = provider.client.fixUUID(entry.uuid)
-            provider.client.modManager.skinHandler?.handle(uuid, entry.skin)
+            entry.skin?.let { provider.client.modManager.skinHandler?.handle(uuid, entry.skin) } // entry.skin is nullable
             PlayerListEntry(GameProfile(uuid, entry.name), GameMode.SURVIVAL, 1, Component.text(entry.name))
         }
         provider.packetOut(ClientboundPlayerInfoPacket(when(packet.action) {

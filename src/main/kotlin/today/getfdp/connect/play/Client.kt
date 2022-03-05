@@ -12,7 +12,7 @@ import com.nukkitx.protocol.bedrock.BedrockPacket
 import net.kyori.adventure.text.Component
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.network.provider.PlayProvider
-import today.getfdp.connect.play.skin.ISkinHandler
+import today.getfdp.connect.play.entity.EntityThePlayer
 import today.getfdp.connect.utils.protocol.BedrockLoginHelper
 import java.util.*
 
@@ -28,7 +28,7 @@ class Client(val session: Session) {
     var commandsEnabled = true
 
     // objects to store in-game data
-    val thePlayer = ThePlayer(this)
+    val thePlayer = EntityThePlayer(this)
     val theWorld = TheWorld(this)
 
     // fabric mods support to enhance the experience

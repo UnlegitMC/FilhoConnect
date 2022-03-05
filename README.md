@@ -6,7 +6,7 @@ A proxy connects Minecraft: Bedrock Edition and Minecraft: Java Edition
 - [X] Chunk translations
 - [X] Move
 - [ ] See entities
-- [ ] Chat
+- [X] Chat
 - [ ] Block interact
 - [ ] Entity interact
 - [ ] Inventory actions
