@@ -48,14 +48,18 @@ object TranslateManager {
     }
 
     fun handle(provider: BedrockProxyProvider, packet: Any) {
-        translators.filter { it.intendedClass.isInstance(packet) }.forEach {
-            if(asyncEnabled && it.async()) {
-                threadPool.execute {
+        try {
+            translators.filter { it.intendedClass.isInstance(packet) }.forEach {
+                if(asyncEnabled && it.async()) {
+                    threadPool.execute {
+                        translateMethod.invoke(it, provider, packet)
+                    }
+                } else {
                     translateMethod.invoke(it, provider, packet)
                 }
-            } else {
-                translateMethod.invoke(it, provider, packet)
             }
+        } catch (t: Throwable) {
+            t.printStackTrace()
         }
     }
 }

@@ -11,11 +11,7 @@ class BedrockMovePlayerTranslator : TranslatorBase<MovePlayerPacket> {
         get() = MovePlayerPacket::class.java
 
     override fun translate(provider: BedrockProxyProvider, packet: MovePlayerPacket) {
-        val entity = provider.client.theWorld.entities[packet.runtimeEntityId.toInt()]
-        if(entity == null) {
-            logWarn("Entity with runtimeId ${packet.runtimeEntityId} not found")
-            return
-        }
+        val entity = provider.client.theWorld.entities[packet.runtimeEntityId.toInt()] ?: return
 
         entity.updatePosition(packet.position)
         entity.updateRotation(packet.rotation)

@@ -9,6 +9,7 @@ import com.nukkitx.protocol.bedrock.packet.PlayerListPacket
 import net.kyori.adventure.text.Component
 import today.getfdp.connect.network.provider.BedrockProxyProvider
 import today.getfdp.connect.translate.TranslatorBase
+import today.getfdp.connect.utils.game.LengthUtils
 
 class BedrockPlayerListTranslator : TranslatorBase<PlayerListPacket> {
 
@@ -19,7 +20,7 @@ class BedrockPlayerListTranslator : TranslatorBase<PlayerListPacket> {
         val entries = packet.entries.map { entry ->
             val uuid = provider.client.fixUUID(entry.uuid)
             entry.skin?.let { provider.client.modManager.skinHandler?.handle(uuid, entry.skin) } // entry.skin is nullable
-            PlayerListEntry(GameProfile(uuid, entry.name), GameMode.SURVIVAL, 1, Component.text(entry.name))
+            PlayerListEntry(GameProfile(uuid, LengthUtils.forName(entry.name)), GameMode.SURVIVAL, 1, Component.text(entry.name))
         }
         provider.packetOut(ClientboundPlayerInfoPacket(when(packet.action) {
             PlayerListPacket.Action.ADD -> {
